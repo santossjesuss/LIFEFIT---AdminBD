@@ -10,3 +10,6 @@
 
 -- 3 - IMPORTACION DE DATOS
 @data_import
+
+-- 5 - INDICES
+@indices 
