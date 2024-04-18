@@ -26,7 +26,6 @@ CREATE TABLE GERENTE (
     gerente.user    UNSIGNED INTEGER,
     despacho        VARCHAR2(255),
     horario         DATE,
-
     
     CONSTRAINT user_fk FOREIGN KEY (id) USING INDEX TABLESPACE TS_INDICES
 );
