@@ -16,5 +16,10 @@
 -- 5 - INDICES
 @indices 
 
--- 6 - MATERIALIZED VIEW
+-- 6 - VISTA MATERIALIZADA
 @materialized_view
+
+-- 7 - SINONIMOS
+@synonims
+
+-- 8 - EJERCICIO
