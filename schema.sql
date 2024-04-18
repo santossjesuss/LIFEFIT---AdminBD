@@ -1,10 +1,3 @@
--- Generado por Oracle SQL Developer Data Modeler 22.2.0.165.1149
---   en:        2024-04-18 19:48:08 CEST
---   sitio:      Oracle Database 11g
---   tipo:      Oracle Database 11g
-
-
-
 -- predefined type, no DDL - MDSYS.SDO_GEOMETRY
 
 -- predefined type, no DDL - XMLTYPE
@@ -16,7 +9,7 @@ CREATE TABLE centro (
     cpostal   VARCHAR2(7 CHAR)
 );
 
-ALTER TABLE centro ADD CONSTRAINT centro_pk PRIMARY KEY ( id );
+ALTER TABLE centro ADD CONSTRAINT centro_pk PRIMARY KEY ( id ) USING INDEX TABLESPACE TS_INDICES;
 
 CREATE TABLE cita (
     fechayhora DATE NOT NULL,
@@ -25,10 +18,9 @@ CREATE TABLE cita (
     cliente_id INTEGER NOT NULL
 );
 
-ALTER TABLE cita ADD CONSTRAINT cita_pk PRIMARY KEY ( fechayhora,
-                                                      id );
+ALTER TABLE cita ADD CONSTRAINT cita_pk PRIMARY KEY ( fechayhora, id ) USING INDEX TABLESPACE TS_INDICES;
 
-ALTER TABLE cita ADD CONSTRAINT cita_pkv1 UNIQUE ( cliente_id );
+ALTER TABLE cita ADD CONSTRAINT cita_pkv1 UNIQUE ( cliente_id )USING INDEX TABLESPACE TS_INDICES;
 
 CREATE TABLE cliente (
     id           INTEGER NOT NULL,
@@ -38,7 +30,7 @@ CREATE TABLE cliente (
     centro_id    INTEGER NOT NULL
 );
 
-ALTER TABLE cliente ADD CONSTRAINT cliente_pk PRIMARY KEY ( id );
+ALTER TABLE cliente ADD CONSTRAINT cliente_pk PRIMARY KEY ( id )USING INDEX TABLESPACE TS_INDICES;
 
 CREATE TABLE conforman (
     series       INTEGER,
@@ -48,8 +40,7 @@ CREATE TABLE conforman (
     ejercicio_id INTEGER NOT NULL
 );
 
-ALTER TABLE conforman ADD CONSTRAINT conforman_pk PRIMARY KEY ( rutina_id,
-                                                                ejercicio_id );
+ALTER TABLE conforman ADD CONSTRAINT conforman_pk PRIMARY KEY ( rutina_id, ejercicio_id )USING INDEX TABLESPACE TS_INDICES;
 
 CREATE TABLE dieta (
     id          INTEGER NOT NULL,
@@ -58,9 +49,9 @@ CREATE TABLE dieta (
     tipo        VARCHAR2(10 CHAR)
 );
 
-ALTER TABLE dieta ADD CONSTRAINT dieta_pk PRIMARY KEY ( id );
+ALTER TABLE dieta ADD CONSTRAINT dieta_pk PRIMARY KEY ( id ) USING INDEX TABLESPACE TS_INDICES;
 
-ALTER TABLE dieta ADD CONSTRAINT dieta_nombre_un UNIQUE ( nombre );
+ALTER TABLE dieta ADD CONSTRAINT dieta_nombre_un UNIQUE ( nombre )USING INDEX TABLESPACE TS_INDICES;
 
 CREATE TABLE ejercicio (
     id          INTEGER NOT NULL,
@@ -70,7 +61,7 @@ CREATE TABLE ejercicio (
     imagen      BLOB
 );
 
-ALTER TABLE ejercicio ADD CONSTRAINT ejercicio_pk PRIMARY KEY ( id );
+ALTER TABLE ejercicio ADD CONSTRAINT ejercicio_pk PRIMARY KEY ( id )USING INDEX TABLESPACE TS_INDICES;
 
 CREATE TABLE elementocalen (
     fechayhora    DATE NOT NULL,
@@ -78,7 +69,7 @@ CREATE TABLE elementocalen (
 );
 
 ALTER TABLE elementocalen ADD CONSTRAINT elementocalendario_pk PRIMARY KEY ( fechayhora,
-                                                                             entrenador_id );
+                                                                             entrenador_id ) USING INDEX TABLESPACE TS_INDICES;
 
 CREATE TABLE entrena (
     especialidad  VARCHAR2(20 CHAR),
@@ -87,7 +78,7 @@ CREATE TABLE entrena (
 );
 
 ALTER TABLE entrena ADD CONSTRAINT entrena_pk PRIMARY KEY ( entrenador_id,
-                                                            cliente_id );
+                                                            cliente_id )USING INDEX TABLESPACE TS_INDICES;
 
 CREATE TABLE entrenador (
     id             INTEGER NOT NULL,
@@ -95,7 +86,7 @@ CREATE TABLE entrenador (
     centro_id      INTEGER NOT NULL
 );
 
-ALTER TABLE entrenador ADD CONSTRAINT entrenador_pk PRIMARY KEY ( id );
+ALTER TABLE entrenador ADD CONSTRAINT entrenador_pk PRIMARY KEY ( id ) USING INDEX TABLESPACE TS_INDICES;
 
 CREATE TABLE gerente (
     id        INTEGER NOT NULL,
@@ -109,7 +100,7 @@ CREATE UNIQUE INDEX gerente__idx ON
         centro_id
     ASC );
 
-ALTER TABLE gerente ADD CONSTRAINT gerente_pk PRIMARY KEY ( id );
+ALTER TABLE gerente ADD CONSTRAINT gerente_pk PRIMARY KEY ( id ) USING INDEX TABLESPACE TS_INDICES;
 
 CREATE TABLE plan (
     inicio                DATE NOT NULL,
@@ -123,7 +114,7 @@ ALTER TABLE plan
     ADD CONSTRAINT plan_pk PRIMARY KEY ( inicio,
                                          rutina_id,
                                          entrena_entrenador_id,
-                                         entrena_cliente_id );
+                                         entrena_cliente_id ) USING INDEX TABLESPACE TS_INDICES;
 
 CREATE TABLE rutina (
     id          INTEGER NOT NULL,
@@ -131,7 +122,7 @@ CREATE TABLE rutina (
     descripcion VARCHAR2(50 CHAR)
 );
 
-ALTER TABLE rutina ADD CONSTRAINT rutina_pk PRIMARY KEY ( id );
+ALTER TABLE rutina ADD CONSTRAINT rutina_pk PRIMARY KEY ( id )USING INDEX TABLESPACE TS_INDICES;
 
 CREATE TABLE sesion (
     inicio                     DATE NOT NULL,
@@ -150,7 +141,7 @@ ALTER TABLE sesion
     ADD CONSTRAINT sesion_pk PRIMARY KEY ( plan_inicio,
                                            plan_rutina_id,
                                            plan_entrena_entrenador_id,
-                                           plan_entrena_cliente_id );
+                                           plan_entrena_cliente_id )USING INDEX TABLESPACE TS_INDICES;
 
 CREATE TABLE usuario (
     id            INTEGER NOT NULL,
@@ -162,7 +153,7 @@ CREATE TABLE usuario (
     usuariooracle VARCHAR2(10 CHAR)
 );
 
-ALTER TABLE usuario ADD CONSTRAINT usuario_pk PRIMARY KEY ( id );
+ALTER TABLE usuario ADD CONSTRAINT usuario_pk PRIMARY KEY ( id )USING INDEX TABLESPACE TS_INDICES;
 
 ALTER TABLE cita
     ADD CONSTRAINT cita_cliente_fk FOREIGN KEY ( cliente_id )
@@ -241,54 +232,4 @@ ALTER TABLE sesion
                           rutina_id,
                           entrena_entrenador_id,
                           entrena_cliente_id );
-
---  ERROR: No Discriminator Column found in Arc FKArc_1 - constraint trigger for Arc cannot be generated 
-
---  ERROR: No Discriminator Column found in Arc FKArc_1 - constraint trigger for Arc cannot be generated 
-
---  ERROR: No Discriminator Column found in Arc FKArc_1 - constraint trigger for Arc cannot be generated
-
-
-
--- Informe de Resumen de Oracle SQL Developer Data Modeler: 
--- 
--- CREATE TABLE                            14
--- CREATE INDEX                             1
--- ALTER TABLE                             33
--- CREATE VIEW                              0
--- ALTER VIEW                               0
--- CREATE PACKAGE                           0
--- CREATE PACKAGE BODY                      0
--- CREATE PROCEDURE                         0
--- CREATE FUNCTION                          0
--- CREATE TRIGGER                           0
--- ALTER TRIGGER                            0
--- CREATE COLLECTION TYPE                   0
--- CREATE STRUCTURED TYPE                   0
--- CREATE STRUCTURED TYPE BODY              0
--- CREATE CLUSTER                           0
--- CREATE CONTEXT                           0
--- CREATE DATABASE                          0
--- CREATE DIMENSION                         0
--- CREATE DIRECTORY                         0
--- CREATE DISK GROUP                        0
--- CREATE ROLE                              0
--- CREATE ROLLBACK SEGMENT                  0
--- CREATE SEQUENCE                          0
--- CREATE MATERIALIZED VIEW                 0
--- CREATE MATERIALIZED VIEW LOG             0
--- CREATE SYNONYM                           0
--- CREATE TABLESPACE                        0
--- CREATE USER                              0
--- 
--- DROP TABLESPACE                          0
--- DROP DATABASE                            0
--- 
--- REDACTION POLICY                         0
--- 
--- ORDS DROP SCHEMA                         0
--- ORDS ENABLE SCHEMA                       0
--- ORDS ENABLE OBJECT                       0
--- 
--- ERRORS                                   4
--- WARNINGS                                 0
+ннннн
