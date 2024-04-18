@@ -1,10 +1,10 @@
 -- 1 - CREACION DEL USUARIO Y TABLESPACE
 -- Desde SYSTEM --
+@handleDeletion
 @create_user
 
 -- 2 - CREACION DEL ESQUEMA
 -- Desde LIFEFIT --
-@handleDeletion
 @schema_gen
 
 -- 3 - IMPORTACION DE DATOS
@@ -15,3 +15,6 @@
 
 -- 5 - INDICES
 @indices 
+
+-- 6 - MATERIALIZED VIEW
+@materialized_view
