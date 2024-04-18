@@ -15,3 +15,6 @@
 
 -- 5 - INDICES
 @indices 
+
+-- 6 - VISTA MATERIALIZADA
+@vista_materializada
