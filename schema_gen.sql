@@ -136,7 +136,7 @@ CREATE TABLE sesion (
     descripcion    VARCHAR2(50 CHAR),
     video          BLOB,
     datos_salud    VARCHAR2(100 CHAR),
-    plan_inicio    VARCHAR2(20 CHAR) NOT NULL,
+    plan_inicio    DATETIME NOT NULL,
     plan_rutina_id UNSIGNED INTEGER NOT NULL,
 
     CONSTRAINT sesion_pk PRIMARY KEY (plan_inicio, plan_rutina_id) USING INDEX TABLESPACE TS_INDICES,
