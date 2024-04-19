@@ -157,7 +157,7 @@ CREATE TABLE usuario (
     nombre        VARCHAR2(10 CHAR) NOT NULL,
     apellidos     VARCHAR2(25 CHAR) NOT NULL,
     telefono      VARCHAR2(12 CHAR) NOT NULL,
-    direcci�n     VARCHAR2(32 CHAR),
+    direccion     VARCHAR2(32 CHAR),
     correoe       VARCHAR2(40 CHAR),
     usuariooracle VARCHAR2(10 CHAR)
 );
