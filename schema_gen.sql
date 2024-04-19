@@ -64,10 +64,10 @@ ALTER TABLE dieta ADD CONSTRAINT dieta_nombre_un UNIQUE ( nombre ) USING INDEX T
 
 CREATE TABLE ejercicio (
     id          INTEGER NOT NULL,
-    nombre      VARCHAR2(20 CHAR) NOT NULL,
-    descripcion VARCHAR2(50 CHAR),
-    video       BLOB,
-    imagen      BLOB
+    nombre      VARCHAR2(50 CHAR) NOT NULL,
+    descripcion VARCHAR2(3000 CHAR),
+    video       VARCHAR2(100 CHAR),
+    imagen      VARCHAR2(100 CHAR)
 );
 
 ALTER TABLE ejercicio ADD CONSTRAINT ejercicio_pk PRIMARY KEY ( id ) USING INDEX TABLESPACE TS_INDICES;

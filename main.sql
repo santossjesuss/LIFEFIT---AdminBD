@@ -8,10 +8,10 @@
 @schema_gen
 
 -- 3 - IMPORTACION DE DATOS
-@data_import
+-- Desde el interfaz de usuario de Oracle SQL Developer --
 
 -- 4 - TABLAS EXTERNAS
--- Desde SYSTEM --
+-- Desde LIFEFIT --
 @external_tables
 
 -- 5 - INDICES
@@ -19,4 +19,13 @@
 @indices 
 
 -- 6 - VISTA MATERIALIZADA
+-- Desde LIFEFIT --
 @vista_materializada
+
+-- 7  SINÓNIMOS
+-- Desde SYSTEM --
+@sinonimos
+
+-- 8 EJERCICIO
+-- Desde LIFEFIT --
+@ejercicio

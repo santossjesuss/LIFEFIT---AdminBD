@@ -1,13 +1,8 @@
--- Para crear la tabla basicamente
-IF (VISTA USUARIO != 'LIFEFIT')
-    DISCONNECT;
-    CONNECT LIFEFIT/LIFEFIT123;
-END IF
-/
-
+------------------------------------ Esta parte desde el usuario SYSTEM, resto desde LIFEFIT ---------------------------------
 CREATE OR REPLACE DIRECTORY directorio_ext AS 'C:\app\alumnos\admin\orcl\dpdump';
 
 GRANT READ, WRITE ON DIRECTORY directorio_ext TO LIFEFIT;
+------------------------------------------------------------------------------------------------------------------------------
 
 CREATE TABLE ejercicios_ext
 (
