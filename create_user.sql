@@ -21,8 +21,10 @@ BEGIN
             DEFAULT TABLESPACE TS_LIFEFIT
             QUOTA 1G ON TS_LIFEFIT';
     END IF;
-
-    EXECUTE IMMEDIATE 'GRANT CREATE TABLE, CREATE VIEW, CREATE MATERIALIZED VIEW, CREATE SEQUENCE, CREATE PROCEDURE TO LIFEFIT';
+    -- También para crear secuencias, procedimientos, vistas, vistas materializadas, 
+    -- privilegios para crear trabajos de , necesarios para las vistas materializadas 
+    EXECUTE IMMEDIATE 'GRANT CREATE TABLE, CREATE VIEW, CREATE MATERIALIZED VIEW, CREATE SEQUENCE,
+        CREATE PROCEDURE, CREATE SESSION, CREATE JOB TO LIFEFIT';
 
     SELECT COUNT(*) INTO tsindexes_exist FROM DBA_TABLESPACES WHERE TABLESPACE_NAME = 'TS_INDICES';
     -- IF (tsindexes_exist > 0) THEN 
