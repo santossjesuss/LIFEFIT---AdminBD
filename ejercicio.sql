@@ -10,6 +10,7 @@ BEGIN
         :new.ID := SEQ_EJERCICIOS.NEXTVAL;
     END IF;
 END tr_EJERCICIOS;
+/
 
 -- Obtener los datos de la tabla EJERCICIO de la tabla externa
 INSERT INTO ejercicio (nombre, descripcion, video)

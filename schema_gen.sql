@@ -154,12 +154,12 @@ ALTER TABLE sesion
 
 CREATE TABLE usuario (
     id            INTEGER NOT NULL,
-    nombre        VARCHAR2(10 CHAR) NOT NULL,
-    apellidos     VARCHAR2(25 CHAR) NOT NULL,
+    nombre        VARCHAR2(20 CHAR) NOT NULL,
+    apellidos     VARCHAR2(40 CHAR) NOT NULL,
     telefono      VARCHAR2(12 CHAR) NOT NULL,
-    direccion     VARCHAR2(32 CHAR),
-    correoe       VARCHAR2(40 CHAR),
-    usuariooracle VARCHAR2(10 CHAR)
+    direccion     VARCHAR2(50 CHAR),
+    correoe       VARCHAR2(50 CHAR),
+    usuariooracle VARCHAR2(30 CHAR)
 );
 
 ALTER TABLE usuario ADD CONSTRAINT usuario_pk PRIMARY KEY ( id ) USING INDEX TABLESPACE TS_INDICES;
