@@ -1,10 +1,10 @@
 -- 1 - CREACION DEL USUARIO Y TABLESPACE
 -- Desde SYSTEM --
-@handleDeletion
 @create_user
 
 -- 2 - CREACION DEL ESQUEMA
 -- Desde LIFEFIT --
+@schema_deletion
 @schema_gen
 
 -- 3 - IMPORTACION DE DATOS

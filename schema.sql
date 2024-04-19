@@ -58,7 +58,7 @@ CREATE TABLE ejercicio (
     nombre      VARCHAR2(20 CHAR) NOT NULL,
     descripcion VARCHAR2(50 CHAR),
     video       BLOB,
-    imagen      BLOB
+    imagen      VARCHAR2(511)
 );
 
 ALTER TABLE ejercicio ADD CONSTRAINT ejercicio_pk PRIMARY KEY ( id )USING INDEX TABLESPACE TS_INDICES;
@@ -148,7 +148,7 @@ CREATE TABLE usuario (
     nombre        VARCHAR2(10 CHAR) NOT NULL,
     apellidos     VARCHAR2(25 CHAR) NOT NULL,
     telefono      VARCHAR2(12 CHAR) NOT NULL,
-    dirección     VARCHAR2(32 CHAR),
+    direccion     VARCHAR2(32 CHAR),
     correoe       VARCHAR2(25 CHAR),
     usuariooracle VARCHAR2(10 CHAR)
 );
@@ -232,4 +232,3 @@ ALTER TABLE sesion
                           rutina_id,
                           entrena_entrenador_id,
                           entrena_cliente_id );
-­­­­­
