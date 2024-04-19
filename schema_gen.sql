@@ -11,7 +11,7 @@
 
 CREATE TABLE centro (
     id        INTEGER NOT NULL,
-    nombre    VARCHAR2(20 CHAR) NOT NULL,
+    nombre    VARCHAR2(30 CHAR) NOT NULL,
     direccion VARCHAR2(50 CHAR),
     cpostal   VARCHAR2(7 CHAR)
 );
@@ -158,7 +158,7 @@ CREATE TABLE usuario (
     apellidos     VARCHAR2(25 CHAR) NOT NULL,
     telefono      VARCHAR2(12 CHAR) NOT NULL,
     direcci�n     VARCHAR2(32 CHAR),
-    correoe       VARCHAR2(25 CHAR),
+    correoe       VARCHAR2(40 CHAR),
     usuariooracle VARCHAR2(10 CHAR)
 );
 

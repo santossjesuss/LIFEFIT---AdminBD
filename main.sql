@@ -11,9 +11,11 @@
 @data_import
 
 -- 4 - TABLAS EXTERNAS
+-- Desde SYSTEM --
 @external_tables
 
 -- 5 - INDICES
+-- Desde LIFEFIT --
 @indices 
 
 -- 6 - VISTA MATERIALIZADA
