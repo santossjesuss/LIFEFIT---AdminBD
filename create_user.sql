@@ -7,9 +7,7 @@ CREATE USER LIFEFIT IDENTIFIED BY LIFEFIT123
 
 --También para crear secuencias, procedimientos, vistas y vistas materializadas
 GRANT CREATE SESSION, CREATE TABLE, CREATE VIEW, CREATE MATERIALIZED VIEW, CREATE SEQUENCE, CREATE PROCEDURE TO LIFEFIT;
--- Privilegios para crear trabajos de , necesarios para las vistas materializadas 
-GRANT CREATE JOB TO LIFEFIT;
-GRANT MANAGE SCHEDULER TO LIFEFIT;
+
 -- Privilegios para crear triggers , necesarios para las secuencias
 GRANT CREATE TRIGGER TO LIFEFIT;
 
