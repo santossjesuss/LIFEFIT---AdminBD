@@ -11,7 +11,7 @@
 -- Desde el interfaz de usuario de Oracle SQL Developer --
 
 -- 4 - TABLAS EXTERNAS
--- Desde LIFEFIT --
+-- LIFEFIT y SYSTEM (ver dentro del archivo)--
 @external_tables
 
 -- 5 - INDICES
