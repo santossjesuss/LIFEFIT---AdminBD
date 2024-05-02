@@ -23,7 +23,7 @@
 @vista_materializada
 
 -- 7  SINÓNIMOS
--- Desde SYSTEM --
+-- Desde LIFEFIT --
 @sinonimos
 
 -- 8 EJERCICIO

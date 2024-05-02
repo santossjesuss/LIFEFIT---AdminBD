@@ -8,8 +8,8 @@ CREATE USER LIFEFIT IDENTIFIED BY LIFEFIT123
 --También para crear secuencias, procedimientos, vistas y vistas materializadas
 GRANT CREATE SESSION, CREATE TABLE, CREATE VIEW, CREATE MATERIALIZED VIEW, CREATE SEQUENCE, CREATE PROCEDURE TO LIFEFIT;
 
--- Privilegios para crear triggers , necesarios para las secuencias
-GRANT CREATE TRIGGER TO LIFEFIT;
+-- Privilegios para crear triggers , necesarios para las secuencias, y para crear sinónimos
+GRANT CREATE TRIGGER, CREATE PUBLIC SYNONYM TO LIFEFIT;
 
 
 CREATE TABLESPACE TS_INDICES DATAFILE 'ts_indices.dbf' SIZE 50M AUTOEXTEND ON;
