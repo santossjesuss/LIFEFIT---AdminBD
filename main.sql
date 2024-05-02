@@ -1,3 +1,5 @@
+------------------------------------------------------PARTE 1
+
 -- 1 - CREACION DEL USUARIO Y TABLESPACE
 -- Desde SYSTEM --
 @handleDeletion
@@ -29,3 +31,9 @@
 -- 8 EJERCICIO
 -- Desde LIFEFIT --
 @ejercicio
+
+------------------------------------------------------PARTE 2
+
+-- Creación de roles y asignación de permisos:
+-- Desde SYSTEM --
+@roles
