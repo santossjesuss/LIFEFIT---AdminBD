@@ -138,7 +138,7 @@ CREATE TABLE sesion (
     fin                        DATE,
     presencial                 VARCHAR2(20 CHAR),
     descripcion                VARCHAR2(50 CHAR),
-    video                      BLOB,
+    video                      VARCHAR2(100 CHAR),
     datos_salud                VARCHAR2(100 CHAR),
     plan_inicio                DATE NOT NULL,
     plan_rutina_id             INTEGER NOT NULL,
