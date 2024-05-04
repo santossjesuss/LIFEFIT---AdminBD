@@ -5,6 +5,11 @@ CREATE ROLE entrenador_deporte;
 CREATE ROLE entrenador_nutricion;
 CREATE ROLE cliente;
 
+-- Asignamos permisos a los roles:
+GRANT DBA TO administrador;
+GRANT administrador TO LIFEFIT;
+
+------------------------------------------------------PARTE 2
 -- 1. RF1. Gestión de los Ejercicios.
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON ejercicio TO entrenador_deporte;
@@ -24,5 +29,3 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON entrena TO gerente;
 -- - Los entrenadores podrán asignar planes, rutinas y sesiones de ejercicios a los clientes.
 GRANT SELECT, INSERT, UPDATE, DELETE ON plan TO entrenador_deporte;
 GRANT SELECT, INSERT, UPDATE, DELETE ON sesion TO entrenador_deporte;
-
-
