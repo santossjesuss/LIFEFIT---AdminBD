@@ -42,6 +42,11 @@ create or replace PACKAGE BASE AS
         CENTRO GERENTE.CENTRO_id%TYPE -- Cambiado a CENTRO_ID
     );
 
+    -- Secuencia para el ID de usuario
+    CREATE SEQUENCE usuario_seq
+    START WITH 1
+    INCREMENT BY 1;
+
     -- Procedimiento para crear un cliente
     PROCEDURE CREA_CLIENTE(
         P_DATOS    IN  TCLIENTE,
