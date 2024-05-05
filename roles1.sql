@@ -12,6 +12,13 @@ GRANT ALL PRIVILEGES TO administrador;
 GRANT administrador TO LIFEFIT;
 
 --------------------DESDE LIFEFIT-------------------
+-- Permisos para conectarse a la base de datos
+GRANT CREATE SESSION, CONNECT TO administrador;
+GRANT CREATE SESSION, CONNECT TO gerente;
+GRANT CREATE SESSION, CONNECT TO entrenador_deporte;
+GRANT CREATE SESSION, CONNECT TO entrenador_nutricion;
+GRANT CREATE SESSION, CONNECT TO cliente;
+
 -- Responsabilidad Gerente
 GRANT SELECT, INSERT, UPDATE, DELETE ON centro TO gerente;
 GRANT SELECT, INSERT, UPDATE, DELETE ON entrenador TO gerente;

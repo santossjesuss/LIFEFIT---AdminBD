@@ -24,7 +24,8 @@ create or replace PACKAGE BODY BASE AS
 
         -- Crear el usuario
         BEGIN
-            EXECUTE IMMEDIATE 'CREATE USER ' || P_DATOS.NOMBRE || ' IDENTIFIED BY ' || P_USERPASS || ' DEFAULT TABLESPACE TS_LIFEFIT QUOTA UNLIMITED ON TS_LIFEFIT';
+            EXECUTE IMMEDIATE 'CREATE USER ' || v_usuariooracle || ' IDENTIFIED BY ' || P_USERPASS || ' DEFAULT TABLESPACE TS_LIFEFIT QUOTA UNLIMITED ON TS_LIFEFIT';
+            GRANT cliente TO v_usuariooracle;
         EXCEPTION
             WHEN OTHERS THEN
                 ROLLBACK TO SAVEPOINT EXCEPCION_CREACION; -- Rollback si hay errores
