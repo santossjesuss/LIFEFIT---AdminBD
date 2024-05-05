@@ -31,6 +31,8 @@ create or replace PACKAGE BASE AS
         CENTRO ENTRENADOR.CENTRO_ID%TYPE -- Cambiado a CENTRO_ID
     );
     
+    -- Tipo de registro para TGERENTE
+
     TYPE TGERENTE IS RECORD (
         NOMBRE USUARIO.NOMBRE%TYPE,
         APELLIDOS USUARIO.APELLIDOS%TYPE,
