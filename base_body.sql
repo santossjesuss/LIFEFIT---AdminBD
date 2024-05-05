@@ -10,7 +10,7 @@ create or replace PACKAGE BODY BASE AS
         PRAGMA AUTONOMOUS_TRANSACTION; -- Directiva para transacción autónoma
         v_usuario_id USUARIO.ID%TYPE;
         v_cliente_id CLIENTE.ID%TYPE;
-        v_usuariooracle VARCHAR2(30); -- Variable para el nombre de usuario Oracle
+        v_usuariooracle USUARIO.USUARIOORACLE%TYPE; -- Variable para el nombre de usuario Oracle
     BEGIN
 
         SAVEPOINT EXCEPCION_CREACION; -- Crear un punto de guardado para rollback
