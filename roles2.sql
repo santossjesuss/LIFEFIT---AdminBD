@@ -32,7 +32,25 @@ WHERE plan_entrena_entrenador_id = (SELECT id FROM usuario WHERE usuariooracle =
 GRANT SELECT ON VSesiones_Entrenador TO entrenador;
 
 -- 3. RF7 Gestión de citas:
--- - Cliente puede pedir / anular / cambiar cita con su entrenador (solo una petición activa a la
--- vez).
--- - Entrenador puede ver la lista de citas (confirmadas, pendientes).
--- - Entrenador puede cambiar estado de cita (confirmar, anular, cambiar fecha u hora.
+ALTER TABLE cita ADD estado_cita CHAR(1) DEFAULT 'P';
+
+CREATE VIEW VCitas_Cliente AS
+SELECT fechayhora, id, modalidad
+FROM cita
+WHERE cliente_id = (SELECT id FROM usuario WHERE usuariooracle = USER);
+
+GRANT SELECT, INSERT, DELETE ON VCitas_Cliente TO cliente;
+
+CREATE VIEW VCitas_Entrenador_Pendientes AS
+SELECT *
+FROM cita
+WHERE id = (SELECT id FROM usuario WHERE usuariooracle = USER) AND estado_cita = 'P';
+
+GRANT SELECT, DELETE, UPDATE(fechayhora, estado_cita) ON VCitas_Entrenador_Pendientes TO entrenador;
+
+CREATE VIEW VCitas_Entrenador_Confirmadas AS
+SELECT *
+FROM cita
+WHERE id = (SELECT id FROM usuario WHERE usuariooracle = USER) AND estado_cita = 'C';
+
+GRANT SELECT ON VCitas_Entrenador_Confirmadas TO entrenador;

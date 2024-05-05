@@ -31,8 +31,6 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON dieta TO entrenador_nutricion;
 GRANT SELECT, INSERT, UPDATE, DELETE ON ejercicio TO entrenador_deporte;
 ALTER TABLE ejercicio ADD PUBLICO CHAR(1) DEFAULT 'S';
 CREATE VIEW VEJERCICIO AS SELECT * FROM ejercicio WHERE PUBLICO = 'S';
-INSERT INTO ejercicio (id, nombre, descripcion, video) SELECT ROWNUM, nombre, descripcion, video FROM ejercicios_ext;
-
 
 -- 2. RF3. Gestión de la rutina
 GRANT SELECT, INSERT, UPDATE, DELETE ON rutina TO entrenador_deporte;
