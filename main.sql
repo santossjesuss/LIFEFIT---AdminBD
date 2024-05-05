@@ -35,6 +35,7 @@
 ------------------------------------------------PARTE 2 y 3
 
 -- Creación de roles y asignación de permisos:
--- Desde SYSTEM --
+-- LIFEFIT y SYSTEM (ver dentro del archivo)--
 @roles1
+-- Desde LIFEFIT --
 @roles2
