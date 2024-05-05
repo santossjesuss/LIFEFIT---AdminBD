@@ -118,4 +118,56 @@ create or replace PACKAGE BODY BASE AS
             RAISE;
     END CREA_GERENTE;
 
+    PROCEDURE ELIMINA_USER(P_ID USUARIO.ID%TYPE) IS
+        BEGIN
+        -- Actualizar el atributo UsuarioOracle a NULL en la tabla USUARIO
+        UPDATE usuario
+        SET usuariooracle = NULL
+        WHERE id = P_ID;
+        
+        -- Commit para confirmar los cambios
+        COMMIT;
+    EXCEPTION
+        WHEN OTHERS THEN
+            -- Manejar cualquier excepción que pueda ocurrir durante el proceso de eliminación
+            ROLLBACK to savepoint EXCEPCION_ELIMINACION; -- Rollback en caso de error
+            RAISE;
+    END ELIMINA_USER;
+    
+    PROCEDURE ELIMINA_CLIENTE(P_ID USUARIO.ID%TYPE) IS
+    BEGIN
+        DELETE FROM usuario WHERE id = P_ID;
+        DELETE FROM cliente WHERE id = P_ID;
+        
+        COMMIT;
+    EXCEPTION
+        WHEN OTHERS THEN
+            ROLLBACK to savepoint EXCEPCION_ELIMINACION;
+            RAISE;
+    END ELIMINA_CLIENTE;
+    
+    PROCEDURE ELIMINA_GERENTE(P_ID USUARIO.ID%TYPE) IS
+    BEGIN
+        DELETE FROM usuario WHERE id = P_ID;
+        COMMIT;
+    EXCEPTION
+        WHEN OTHERS THEN
+            ROLLBACK to savepoint EXCEPCION_ELIMINACION;
+            RAISE;
+    END ELIMINA_GERENTE;
+    
+    PROCEDURE ELIMINA_ENTRENADOR(P_ID USUARIO.ID%TYPE) IS
+    BEGIN
+
+        DELETE FROM plan WHERE entrena_entrenador_id = P_ID;
+        DELETE FROM entrenador WHERE id = P_ID;
+        DELETE FROM usuario WHERE id = P_ID;
+        
+        COMMIT;
+    EXCEPTION
+        WHEN OTHERS THEN
+            ROLLBACK to savepoint EXCEPCION_ELIMINACION;
+            RAISE;
+    END ELIMINA_ENTRENADOR;
+
 END BASE;
