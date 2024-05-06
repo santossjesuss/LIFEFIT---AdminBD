@@ -180,11 +180,24 @@ create or replace PACKAGE BODY BASE AS
 
 
     PROCEDURE ELIMINA_USER(P_ID USUARIO.ID%TYPE) IS
+        v_usuariooracle VARCHAR2(100);
         BEGIN
+        SELECT usuariooracle INTO v_usuariooracle FROM usuario WHERE id = P_ID;
         -- Actualizar el atributo UsuarioOracle a NULL en la tabla USUARIO
         UPDATE usuario
         SET usuariooracle = NULL
         WHERE id = P_ID;
+        
+        BEGIN
+                EXECUTE IMMEDIATE 'DROP USER ' || v_usuariooracle || ' CASCADE ';
+            EXCEPTION
+                WHEN OTHERS THEN
+                    ROLLBACK TO SAVEPOINT EXCEPCION_ELIMINACION; -- Rollback si hay errores
+    
+                    -- Si falla la eliminacion del usuario, manejar el error
+                    DBMS_OUTPUT.PUT_LINE('Error al eliminar el usuario');
+                    RAISE EXCEPCION_ELIMINACION;
+        END;
         
         -- Commit para confirmar los cambios
         COMMIT;
@@ -196,7 +209,20 @@ create or replace PACKAGE BODY BASE AS
     END ELIMINA_USER;
     
     PROCEDURE ELIMINA_CLIENTE(P_ID USUARIO.ID%TYPE) IS
+    v_usuariooracle VARCHAR2(100);
     BEGIN
+    SELECT usuariooracle INTO v_usuariooracle FROM usuario WHERE id = P_ID;
+    BEGIN
+        EXECUTE IMMEDIATE 'DROP USER ' || v_usuariooracle || ' CASCADE ';
+            EXCEPTION
+                WHEN OTHERS THEN
+                    ROLLBACK TO SAVEPOINT EXCEPCION_ELIMINACION; -- Rollback si hay errores
+    
+                -- Si falla la eliminacion del cliente, manejar el error
+                DBMS_OUTPUT.PUT_LINE('Error al eliminar el cliente');
+                RAISE EXCEPCION_ELIMINACION;
+        END;
+
         DELETE FROM usuario WHERE id = P_ID;
         DELETE FROM cliente WHERE id = P_ID;
         
@@ -208,7 +234,20 @@ create or replace PACKAGE BODY BASE AS
     END ELIMINA_CLIENTE;
     
     PROCEDURE ELIMINA_GERENTE(P_ID USUARIO.ID%TYPE) IS
+    v_usuariooracle VARCHAR2(100);
     BEGIN
+    SELECT usuariooracle INTO v_usuariooracle FROM usuario WHERE id = P_ID;
+    BEGIN
+        EXECUTE IMMEDIATE 'DROP USER ' || v_usuariooracle || ' CASCADE ';
+        EXCEPTION
+            WHEN OTHERS THEN
+                ROLLBACK TO SAVEPOINT EXCEPCION_ELIMINACION; -- Rollback si hay errores
+    
+                -- Si falla la eliminacion del gerente, manejar el error
+                DBMS_OUTPUT.PUT_LINE('Error al eliminar el gerente');
+                RAISE EXCEPCION_ELIMINACION;
+    END;
+
         DELETE FROM usuario WHERE id = P_ID;
         COMMIT;
     EXCEPTION
@@ -218,7 +257,19 @@ create or replace PACKAGE BODY BASE AS
     END ELIMINA_GERENTE;
     
     PROCEDURE ELIMINA_ENTRENADOR(P_ID USUARIO.ID%TYPE) IS
+    v_usuariooracle VARCHAR2(100);
     BEGIN
+    SELECT usuariooracle INTO v_usuariooracle FROM usuario WHERE id = P_ID;
+    BEGIN
+        EXECUTE IMMEDIATE 'DROP USER ' || v_usuariooracle || ' CASCADE ';
+        EXCEPTION
+            WHEN OTHERS THEN
+                ROLLBACK TO SAVEPOINT EXCEPCION_ELIMINACION; -- Rollback si hay errores
+    
+                -- Si falla la eliminacion del entrenador, manejar el error
+                DBMS_OUTPUT.PUT_LINE('Error al eliminar el entrenador');
+                RAISE EXCEPCION_ELIMINACION;
+    END;
 
         DELETE FROM plan WHERE entrena_entrenador_id = P_ID;
         DELETE FROM entrenador WHERE id = P_ID;
