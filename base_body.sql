@@ -178,57 +178,144 @@ create or replace PACKAGE BODY BASE AS
             RAISE EXCEPCION_ELIMINACION;
     END CREA_GERENTE;
 
-
+    --Implementación del procedimiento de eliminación de usuario
     PROCEDURE ELIMINA_USER(P_ID USUARIO.ID%TYPE) IS
         BEGIN
+        SAVEPOINT EXCEPCION_ELIMINACION; -- Crear un punto de guardado para rollback
         -- Actualizar el atributo UsuarioOracle a NULL en la tabla USUARIO
         UPDATE usuario
         SET usuariooracle = NULL
         WHERE id = P_ID;
+
+        -- Eliminar el usuario de Oracle
+        BEGIN
+            EXECUTE IMMEDIATE 'DROP USER LIFEFIT_' || P_ID || ' CASCADE';
+        EXCEPTION
+            WHEN OTHERS THEN
+                ROLLBACK TO SAVEPOINT EXCEPCION_ELIMINACION; -- Rollback en caso de error
+                RAISE EXCEPTION_ELIMINACION; -- Relanzar la excepción
         
         -- Commit para confirmar los cambios
         COMMIT;
     EXCEPTION
         WHEN OTHERS THEN
             -- Manejar cualquier excepción que pueda ocurrir durante el proceso de eliminación
-            ROLLBACK to savepoint EXCEPCION_ELIMINACION; -- Rollback en caso de error
-            RAISE;
+            ROLLBACK TO SAVEPOINT EXCEPCION_ELIMINACION; -- Rollback en caso de error
+            RAISE EXCEPTION_ELIMINIACION ; -- Relanzar la excepción
     END ELIMINA_USER;
-    
-    PROCEDURE ELIMINA_CLIENTE(P_ID USUARIO.ID%TYPE) IS
-    BEGIN
-        DELETE FROM usuario WHERE id = P_ID;
-        DELETE FROM cliente WHERE id = P_ID;
-        
-        COMMIT;
-    EXCEPTION
-        WHEN OTHERS THEN
-            ROLLBACK to savepoint EXCEPCION_ELIMINACION;
-            RAISE;
-    END ELIMINA_CLIENTE;
-    
-    PROCEDURE ELIMINA_GERENTE(P_ID USUARIO.ID%TYPE) IS
-    BEGIN
-        DELETE FROM usuario WHERE id = P_ID;
-        COMMIT;
-    EXCEPTION
-        WHEN OTHERS THEN
-            ROLLBACK to savepoint EXCEPCION_ELIMINACION;
-            RAISE;
-    END ELIMINA_GERENTE;
-    
-    PROCEDURE ELIMINA_ENTRENADOR(P_ID USUARIO.ID%TYPE) IS
-    BEGIN
 
-        DELETE FROM plan WHERE entrena_entrenador_id = P_ID;
-        DELETE FROM entrenador WHERE id = P_ID;
-        DELETE FROM usuario WHERE id = P_ID;
+    --Implementación del procedimiento de eliminación de cliente
+    PROCEDURE ELIMINA_CLIENTE(P_ID USUARIO.ID%TYPE) IS
+        BEGIN
+        SAVEPOINT EXCEPCION_ELIMINACION; -- Crear un punto de guardado para rollback
+        -- Actualizar el atributo UsuarioOracle a NULL en la tabla USUARIO
+        UPDATE usuario
+        SET usuariooracle = NULL
+        WHERE id = P_ID;
+
+        -- Eliminar el usuario de Oracle
+        BEGIN
+            EXECUTE IMMEDIATE 'DROP USER LIFEFIT_' || P_ID || ' CASCADE';
+        EXCEPTION
+            WHEN OTHERS THEN
+                ROLLBACK TO SAVEPOINT EXCEPCION_ELIMINACION; -- Rollback en caso de error
+                RAISE EXCEPTION_ELIMINACION; -- Relanzar la excepción
         
+        -- Eliminamos el contenido del cliente de la BD
+        DELETE FROM cliente
+        WHERE id = P_ID;
+
+        DELETE FROM cita
+        WHERE cliente_id = P_ID;
+
+        DELETE FROM entrena
+        WHERE cliente_id = P_ID;
+
+        DELETE FROM plan
+        WHERE entrena_cliente_id = P_ID;
+
+        DELETE FROM sesion
+        WHERE plan_entrena_cliente_id = P_ID;
+    
+        -- Commit para confirmar los cambios
         COMMIT;
     EXCEPTION
         WHEN OTHERS THEN
-            ROLLBACK to savepoint EXCEPCION_ELIMINACION;
-            RAISE;
+            -- Manejar cualquier excepción que pueda ocurrir durante el proceso de eliminación
+            ROLLBACK TO SAVEPOINT EXCEPCION_ELIMINACION; -- Rollback en caso de error
+            RAISE EXCEPTION_ELIMINIACION ; -- Relanzar la excepción
+    END ELIMINA_CLIENTE;
+
+    --Implementación del procedimiento de eliminación de gerente
+    PROCEDURE ELIMINA_GERENTE(P_ID USUARIO.ID%TYPE) IS
+        BEGIN
+        SAVEPOINT EXCEPCION_ELIMINACION; -- Crear un punto de guardado para rollback
+        -- Actualizar el atributo UsuarioOracle a NULL en la tabla USUARIO
+        UPDATE usuario
+        SET usuariooracle = NULL
+        WHERE id = P_ID;
+
+        -- Eliminar el usuario de Oracle
+        BEGIN
+            EXECUTE IMMEDIATE 'DROP USER LIFEFIT_' || P_ID || ' CASCADE';
+        EXCEPTION
+            WHEN OTHERS THEN
+                ROLLBACK TO SAVEPOINT EXCEPCION_ELIMINACION; -- Rollback en caso de error
+                RAISE EXCEPTION_ELIMINACION; -- Relanzar la excepción
+        
+        -- Eliminamos el contenido del gerente de la BD
+        DELETE FROM gerente
+        WHERE id = P_ID;
+
+        -- Commit para confirmar los cambios
+        COMMIT;
+    EXCEPTION
+        WHEN OTHERS THEN
+            -- Manejar cualquier excepción que pueda ocurrir durante el proceso de eliminación
+            ROLLBACK TO SAVEPOINT EXCEPCION_ELIMINACION; -- Rollback en caso de error
+            RAISE EXCEPTION_ELIMINIACION ; -- Relanzar la excepción
+    END ELIMINA_GERENTE;
+
+    --Implementación del procedimiento de eliminación de entrenador
+    PROCEDURE ELIMINA_ENTRENADOR(P_ID USUARIO.ID%TYPE) IS
+        BEGIN
+        SAVEPOINT EXCEPCION_ELIMINACION; -- Crear un punto de guardado para rollback
+        -- Actualizar el atributo UsuarioOracle a NULL en la tabla USUARIO
+        UPDATE usuario
+        SET usuariooracle = NULL
+        WHERE id = P_ID;
+
+        -- Eliminar el usuario de Oracle
+        BEGIN
+            EXECUTE IMMEDIATE 'DROP USER LIFEFIT_' || P_ID || ' CASCADE';
+        EXCEPTION
+            WHEN OTHERS THEN
+                ROLLBACK TO SAVEPOINT EXCEPCION_ELIMINACION; -- Rollback en caso de error
+                RAISE EXCEPTION_ELIMINACION; -- Relanzar la excepción
+        
+        -- Eliminamos el contenido del entrenador de la BD
+        DELETE FROM entrenador
+        WHERE id = P_ID;
+
+        DELETE FROM elementocalen
+        WHERE entrenador_id = P_ID;
+
+        DELETE FROM entrena
+        WHERE entrenador_id = P_ID;
+
+        DELETE FROM plan
+        WHERE entrena_entrenador_id = P_ID;
+
+        DELETE FROM sesion
+        WHERE plan_entrena_entrenador_id = P_ID;
+    
+        -- Commit para confirmar los cambios
+        COMMIT;
+    EXCEPTION
+        WHEN OTHERS THEN
+            -- Manejar cualquier excepción que pueda ocurrir durante el proceso de eliminación
+            ROLLBACK TO SAVEPOINT EXCEPCION_ELIMINACION; -- Rollback en caso de error
+            RAISE EXCEPTION_ELIMINIACION ; -- Relanzar la excepción
     END ELIMINA_ENTRENADOR;
 
 END BASE;
