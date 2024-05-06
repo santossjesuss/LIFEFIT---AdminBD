@@ -41,5 +41,7 @@
 @roles2
 
 ------------------------------------------------PL/SQL
+-- Desde LIFEFIT --
+@secuencia
 @base 
 @base_body

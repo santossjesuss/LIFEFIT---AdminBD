@@ -35,7 +35,7 @@ create or replace PACKAGE BODY BASE AS
         END;
 
         -- Asignar el rol de cliente al usuario
-        GRANT cliente TO v_usuariooracle;
+        EXECUTE IMMEDIATE 'GRANT cliente TO ' || v_usuariooracle;
 
         -- Insertar usuario
         INSERT INTO usuario (id, nombre, apellidos, telefono, direccion, correoe, usuariooracle)
@@ -99,8 +99,8 @@ create or replace PACKAGE BODY BASE AS
             END;
 
             -- Asignar el rol de entrenador al usuario
-            GRANT entrenador_deporte TO v_usuariooracle;
-            GRANT entrenador_nutricion TO v_usuariooracle;
+            EXECUTE IMMEDIATE 'GRANT entrenador_deporte TO ' || v_usuariooracle;
+            EXECUTE IMMEDIATE 'GRANT entrenador_nutricion TO ' || v_usuariooracle;
     
             -- Insertar usuario
             INSERT INTO usuario (id, nombre, apellidos, telefono, direccion, correoe, usuariooracle)
@@ -136,7 +136,7 @@ create or replace PACKAGE BODY BASE AS
         P_USUARIO OUT USUARIO%ROWTYPE,
         P_GERENTE OUT GERENTE%ROWTYPE
     ) IS
-        PRAGMA AUTONOMOUS_TRANSACTION
+        PRAGMA AUTONOMOUS_TRANSACTION;
         v_usuario_id USUARIO.ID%TYPE;
         v_gerente_id GERENTE.ID%TYPE;
         v_usuariooracle USUARIO.USUARIOORACLE%TYPE;
@@ -157,8 +157,8 @@ create or replace PACKAGE BODY BASE AS
                 RAISE EXCEPCION_CREACION;
         END;
         
-        GRANT gerente TO v_usuariooracle;
-        
+        EXECUTE IMMEDIATE 'GRANT gerente TO ' || v_usuariooracle;
+
         INSERT INTO usuario (id, nombre, apellidos, telefono, direccion, correoe, usuariooracle)
         VALUES (v_usuario_id, P_DATOS.NOMBRE, P_DATOS.APELLIDOS, P_DATOS.TELEFONO, P_DATOS.DIRECCION, P_DATOS.CORREOE, v_usuariooracle);
         
@@ -180,7 +180,7 @@ create or replace PACKAGE BODY BASE AS
 
     --Implementación del procedimiento de eliminación de usuario
     PROCEDURE ELIMINA_USER(P_ID USUARIO.ID%TYPE) IS
-        BEGIN
+    BEGIN
         SAVEPOINT EXCEPCION_ELIMINACION; -- Crear un punto de guardado para rollback
         -- Actualizar el atributo UsuarioOracle a NULL en la tabla USUARIO
         UPDATE usuario
@@ -193,7 +193,8 @@ create or replace PACKAGE BODY BASE AS
         EXCEPTION
             WHEN OTHERS THEN
                 ROLLBACK TO SAVEPOINT EXCEPCION_ELIMINACION; -- Rollback en caso de error
-                RAISE EXCEPTION_ELIMINACION; -- Relanzar la excepción
+                RAISE EXCEPCION_ELIMINACION; -- Relanzar la excepción
+        END;
         
         -- Commit para confirmar los cambios
         COMMIT;
@@ -201,12 +202,12 @@ create or replace PACKAGE BODY BASE AS
         WHEN OTHERS THEN
             -- Manejar cualquier excepción que pueda ocurrir durante el proceso de eliminación
             ROLLBACK TO SAVEPOINT EXCEPCION_ELIMINACION; -- Rollback en caso de error
-            RAISE EXCEPTION_ELIMINIACION ; -- Relanzar la excepción
+            RAISE EXCEPCION_ELIMINACION ; -- Relanzar la excepción
     END ELIMINA_USER;
 
     --Implementación del procedimiento de eliminación de cliente
     PROCEDURE ELIMINA_CLIENTE(P_ID USUARIO.ID%TYPE) IS
-        BEGIN
+    BEGIN
         SAVEPOINT EXCEPCION_ELIMINACION; -- Crear un punto de guardado para rollback
         -- Actualizar el atributo UsuarioOracle a NULL en la tabla USUARIO
         UPDATE usuario
@@ -219,7 +220,8 @@ create or replace PACKAGE BODY BASE AS
         EXCEPTION
             WHEN OTHERS THEN
                 ROLLBACK TO SAVEPOINT EXCEPCION_ELIMINACION; -- Rollback en caso de error
-                RAISE EXCEPTION_ELIMINACION; -- Relanzar la excepción
+                RAISE EXCEPCION_ELIMINACION; -- Relanzar la excepción
+        END;
         
         -- Eliminamos el contenido del cliente de la BD
         DELETE FROM cliente
@@ -243,12 +245,12 @@ create or replace PACKAGE BODY BASE AS
         WHEN OTHERS THEN
             -- Manejar cualquier excepción que pueda ocurrir durante el proceso de eliminación
             ROLLBACK TO SAVEPOINT EXCEPCION_ELIMINACION; -- Rollback en caso de error
-            RAISE EXCEPTION_ELIMINIACION ; -- Relanzar la excepción
+            RAISE EXCEPCION_ELIMINACION ; -- Relanzar la excepción
     END ELIMINA_CLIENTE;
 
     --Implementación del procedimiento de eliminación de gerente
     PROCEDURE ELIMINA_GERENTE(P_ID USUARIO.ID%TYPE) IS
-        BEGIN
+    BEGIN
         SAVEPOINT EXCEPCION_ELIMINACION; -- Crear un punto de guardado para rollback
         -- Actualizar el atributo UsuarioOracle a NULL en la tabla USUARIO
         UPDATE usuario
@@ -261,8 +263,8 @@ create or replace PACKAGE BODY BASE AS
         EXCEPTION
             WHEN OTHERS THEN
                 ROLLBACK TO SAVEPOINT EXCEPCION_ELIMINACION; -- Rollback en caso de error
-                RAISE EXCEPTION_ELIMINACION; -- Relanzar la excepción
-        
+                RAISE EXCEPCION_ELIMINACION; -- Relanzar la excepción
+        END;
         -- Eliminamos el contenido del gerente de la BD
         DELETE FROM gerente
         WHERE id = P_ID;
@@ -273,12 +275,12 @@ create or replace PACKAGE BODY BASE AS
         WHEN OTHERS THEN
             -- Manejar cualquier excepción que pueda ocurrir durante el proceso de eliminación
             ROLLBACK TO SAVEPOINT EXCEPCION_ELIMINACION; -- Rollback en caso de error
-            RAISE EXCEPTION_ELIMINIACION ; -- Relanzar la excepción
+            RAISE EXCEPCION_ELIMINACION ; -- Relanzar la excepción
     END ELIMINA_GERENTE;
 
     --Implementación del procedimiento de eliminación de entrenador
     PROCEDURE ELIMINA_ENTRENADOR(P_ID USUARIO.ID%TYPE) IS
-        BEGIN
+    BEGIN
         SAVEPOINT EXCEPCION_ELIMINACION; -- Crear un punto de guardado para rollback
         -- Actualizar el atributo UsuarioOracle a NULL en la tabla USUARIO
         UPDATE usuario
@@ -291,8 +293,8 @@ create or replace PACKAGE BODY BASE AS
         EXCEPTION
             WHEN OTHERS THEN
                 ROLLBACK TO SAVEPOINT EXCEPCION_ELIMINACION; -- Rollback en caso de error
-                RAISE EXCEPTION_ELIMINACION; -- Relanzar la excepción
-        
+                RAISE EXCEPCION_ELIMINACION; -- Relanzar la excepción
+        END;
         -- Eliminamos el contenido del entrenador de la BD
         DELETE FROM entrenador
         WHERE id = P_ID;
@@ -315,7 +317,7 @@ create or replace PACKAGE BODY BASE AS
         WHEN OTHERS THEN
             -- Manejar cualquier excepción que pueda ocurrir durante el proceso de eliminación
             ROLLBACK TO SAVEPOINT EXCEPCION_ELIMINACION; -- Rollback en caso de error
-            RAISE EXCEPTION_ELIMINIACION ; -- Relanzar la excepción
+            RAISE EXCEPCION_ELIMINACION ; -- Relanzar la excepción
     END ELIMINA_ENTRENADOR;
 
 END BASE;
