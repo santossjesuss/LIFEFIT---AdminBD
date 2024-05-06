@@ -49,12 +49,6 @@ create or replace PACKAGE BASE AS
     START WITH 1
     INCREMENT BY 1;
 
-    --Otra opción que vi en internet
-    /*CREATE SEQUENCE usuario_seq;
-
-    ALTER TABLE usuario
-    MODIFY id DEFAULT usuario_seq.NEXTVAL;*/
-
     -- Procedimiento para crear un cliente
     PROCEDURE CREA_CLIENTE(
         P_DATOS    IN  TCLIENTE,
