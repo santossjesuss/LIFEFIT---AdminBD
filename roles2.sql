@@ -1,5 +1,4 @@
 ------------------------------------------------------PARTE 3
-ALTER TABLE sesion ADD estado_entrenamiento VARCHAR2(20 CHAR);
 
 -- 1. RF5. Control del cliente de sus sesiones de entrenamiento
 CREATE VIEW VSESIONES_ACTUALES_CLIENTE AS
@@ -10,10 +9,7 @@ WHERE plan_entrena_cliente_id  = (SELECT id FROM usuario WHERE usuariooracle = U
 GRANT SELECT ON VSESIONES_ACTUALES_CLIENTE TO cliente;
 
 -- - Gestión de estado personal del cliente (responsabilidad del cliente)
-GRANT UPDATE (video, estado_entrenamiento) ON VSESIONES_ACTUALES_CLIENTE TO cliente;
-
--- - Actualización del perfil:
-GRANT UPDATE (datos_salud) ON VSESIONES_ACTUALES_CLIENTE TO cliente;
+GRANT UPDATE (video, datos_salud, estado_entrenamiento) ON VSESIONES_ACTUALES_CLIENTE TO cliente;
 
 CREATE VIEW VCLIENTE AS
 SELECT c.*
@@ -30,7 +26,7 @@ GRANT SELECT, UPDATE (objetivo, preferencias) ON VCLIENTE TO cliente;
 ALTER TABLE cita ADD estado_cita CHAR(1) DEFAULT 'P';
 
 CREATE VIEW VCITAS_CLIENTE AS
-SELECT fechayhora, id, modalidad
+SELECT fechayhora, id, modalidad, estado_cita
 FROM cita
 WHERE cliente_id = (SELECT id FROM usuario WHERE usuariooracle = USER);
 

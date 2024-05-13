@@ -54,6 +54,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON entrena TO gerente;
 CREATE VIEW VPLAN_ENTRENADOR AS SELECT * FROM plan WHERE entrena_entrenador_id = (SELECT id FROM usuario WHERE usuariooracle = USER);
 GRANT SELECT, INSERT, UPDATE, DELETE ON VPLAN_ENTRENADOR TO entrenador_deporte;
 
-CREATE VIEW VSESION_ENTRENADOR AS SELECT inicio, fin, presencial, descripcion, plan_inicio, plan_rutina_id, plan_entrena_entrenador_id, plan_entrena_cliente_id 
-                       FROM sesion WHERE plan_entrena_entrenador_id = (SELECT id FROM USUARIO WHERE usuariooracle = USER);
-GRANT SELECT, INSERT, UPDATE, DELETE ON VSESION_ENTRENADOR TO entrenador_deporte;
+ALTER TABLE sesion ADD estado_entrenamiento VARCHAR2(20 CHAR);
+
+CREATE VIEW VSESION_ENTRENADOR AS SELECT * FROM sesion WHERE plan_entrena_entrenador_id = (SELECT id FROM USUARIO WHERE usuariooracle = USER);
+GRANT SELECT, INSERT, UPDATE(inicio, fin, presencial, descripcion, plan_inicio, plan_rutina_id, plan_entrena_entrenador_id, plan_entrena_cliente_id) ON VSESION_ENTRENADOR TO entrenador_deporte;
