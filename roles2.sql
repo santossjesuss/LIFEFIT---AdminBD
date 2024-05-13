@@ -21,7 +21,7 @@ FROM cliente c
 JOIN usuario u ON c.id = u.id
 WHERE u.usuariooracle = USER;
 
-GRANT UPDATE (objetivo, preferencias) ON VCLIENTE TO cliente;
+GRANT SELECT, UPDATE (objetivo, preferencias) ON VCLIENTE TO cliente;
 
 -- 2. RF6 Seguimiento de entrenamientos (entrenador)
 -- Hecho en el RF4
