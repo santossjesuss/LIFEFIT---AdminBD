@@ -7,13 +7,14 @@ CREATE ROLE entrenador_deporte;
 CREATE ROLE entrenador_nutricion;
 CREATE ROLE cliente;
 
--- Asignamos permisos a los roles:
-GRANT ALL PRIVILEGES TO administrador;
+-- Permisos de administrador
+GRANT CREATE SESSION, CONNECT, SELECT, INSERT, UPDATE, DELETE TO administrador WITH GRANT OPTION;
+
+-- Asignamos rol a LIFEEFIT:
 GRANT administrador TO LIFEFIT;
 
 --------------------DESDE LIFEFIT-------------------
 -- Permisos para conectarse a la base de datos
-GRANT CREATE SESSION, CONNECT TO administrador;
 GRANT CREATE SESSION, CONNECT TO gerente;
 GRANT CREATE SESSION, CONNECT TO entrenador_deporte;
 GRANT CREATE SESSION, CONNECT TO entrenador_nutricion;
