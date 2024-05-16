@@ -13,8 +13,6 @@ create or replace PACKAGE BODY BASE AS
         v_usuariooracle USUARIO.USUARIOORACLE%TYPE; -- Variable para el nombre de usuario Oracle
     BEGIN
 
-        SAVEPOINT EXCEPCION_CREACION; -- Crear un punto de guardado para rollback
-
         -- Obtener el próximo valor de la secuencia para el ID del usuario y cliente
         SELECT usuario_seq.NEXTVAL INTO v_usuario_id FROM dual;
         v_cliente_id := v_usuario_id; -- El ID del cliente es igual al ID del usuario
@@ -27,7 +25,7 @@ create or replace PACKAGE BODY BASE AS
             EXECUTE IMMEDIATE 'CREATE USER ' || v_usuariooracle || ' IDENTIFIED BY ' || P_USERPASS || ' DEFAULT TABLESPACE TS_LIFEFIT QUOTA UNLIMITED ON TS_LIFEFIT';
         EXCEPTION
             WHEN OTHERS THEN
-                ROLLBACK TO SAVEPOINT EXCEPCION_CREACION; -- Rollback si hay errores
+                ROLLBACK; -- Rollback si hay errores
 
                 -- Si falla la creación del usuario, manejar el error
                 DBMS_OUTPUT.PUT_LINE('Error al crear el cliente');
@@ -55,14 +53,15 @@ create or replace PACKAGE BODY BASE AS
     EXCEPTION
         WHEN OTHERS THEN
             -- Si se produce una excepción, realizar rollback
-            ROLLBACK TO SAVEPOINT EXCEPCION_CREACION;
+            ROLLBACK;
             
             -- Eliminar el usuario creado si la excepción ocurre después de la creación
-            EXECUTE IMMEDIATE 'DROP USER ' || P_DATOS.NOMBRE || ' CASCADE';
+            EXECUTE IMMEDIATE 'DROP USER ' || v_usuariooracle || ' CASCADE';
             DBMS_OUTPUT.PUT_LINE('Error al eliminar el cliente creado');
             RAISE EXCEPCION_ELIMINACION;
     END CREA_CLIENTE;
     
+    /*
 
     --Implementación del procedimiento CREAR_ENTRENADOR
     PROCEDURE CREA_ENTRENADOR(
@@ -251,8 +250,7 @@ create or replace PACKAGE BODY BASE AS
     --Implementación del procedimiento de eliminación de gerente
     PROCEDURE ELIMINA_GERENTE(P_ID USUARIO.ID%TYPE) IS
     BEGIN
-        SAVEPOINT EXCEPCION_ELIMINACION; -- Crear un punto de guardado para rollback
-        -- Actualizar el atributo UsuarioOracle a NULL en la tabla USUARIO
+
         UPDATE usuario
         SET usuariooracle = NULL
         WHERE id = P_ID;
@@ -262,7 +260,7 @@ create or replace PACKAGE BODY BASE AS
             EXECUTE IMMEDIATE 'DROP USER LIFEFIT_' || P_ID || ' CASCADE';
         EXCEPTION
             WHEN OTHERS THEN
-                ROLLBACK TO SAVEPOINT EXCEPCION_ELIMINACION; -- Rollback en caso de error
+                ROLLBACK; -- Rollback en caso de error
                 RAISE EXCEPCION_ELIMINACION; -- Relanzar la excepción
         END;
         -- Eliminamos el contenido del gerente de la BD
@@ -319,5 +317,7 @@ create or replace PACKAGE BODY BASE AS
             ROLLBACK TO SAVEPOINT EXCEPCION_ELIMINACION; -- Rollback en caso de error
             RAISE EXCEPCION_ELIMINACION ; -- Relanzar la excepción
     END ELIMINA_ENTRENADOR;
+
+    */
 
 END BASE;
