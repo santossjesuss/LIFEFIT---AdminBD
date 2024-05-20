@@ -11,7 +11,21 @@ create or replace PACKAGE BODY BASE AS
         v_usuario_id USUARIO.ID%TYPE;
         v_cliente_id CLIENTE.ID%TYPE;
         v_usuariooracle USUARIO.USUARIOORACLE%TYPE; -- Variable para el nombre de usuario Oracle
+        v_countcorreo INTEGER; -- Variable para comprobar el correo electrónico
+        v_counttelefono INTEGER; -- Variable para comprobar el teléfono
     BEGIN
+
+        -- Mirar si el correo ya existe, si existe, lanzar excepción
+        SELECT COUNT(*) INTO v_countcorreo FROM USUARIO WHERE correoe = P_DATOS.CORREOE;
+        IF v_countcorreo > 0 THEN
+            RAISE EXCEPCION_CREACION;
+        END IF;
+
+        -- Mirar si el correo ya existe, si existe, lanzar excepción
+        SELECT COUNT(*) INTO v_counttelefono FROM USUARIO WHERE telefono = P_DATOS.TELEFONO;
+        IF v_counttelefono > 0 THEN
+            RAISE EXCEPCION_CREACION;
+        END IF;
 
         -- Obtener el próximo valor de la secuencia para el ID del usuario y cliente
         SELECT usuario_seq.NEXTVAL INTO v_usuario_id FROM dual;

@@ -33,7 +33,7 @@ ALTER TABLE cita ADD CONSTRAINT cita_pkv1 UNIQUE ( cliente_id ) USING INDEX TABL
 CREATE TABLE cliente (
     id           INTEGER NOT NULL,
     objetivo     VARCHAR2(20 CHAR) NOT NULL,
-    preferencias VARCHAR2(50 CHAR),
+    preferencias VARCHAR2(250 CHAR),
     dieta_id     INTEGER,
     centro_id    INTEGER NOT NULL
 );
@@ -53,9 +53,9 @@ ALTER TABLE conforman ADD CONSTRAINT conforman_pk PRIMARY KEY ( rutina_id,
 
 CREATE TABLE dieta (
     id          INTEGER NOT NULL,
-    nombre      VARCHAR2(20 CHAR) NOT NULL,
-    descripcion VARCHAR2(50 CHAR),
-    tipo        VARCHAR2(10 CHAR)
+    nombre      VARCHAR2(50 CHAR) NOT NULL,
+    descripcion VARCHAR2(250 CHAR),
+    tipo        VARCHAR2(50 CHAR)
 );
 
 ALTER TABLE dieta ADD CONSTRAINT dieta_pk PRIMARY KEY ( id ) USING INDEX TABLESPACE TS_INDICES;
@@ -127,8 +127,8 @@ ALTER TABLE plan
 
 CREATE TABLE rutina (
     id          INTEGER NOT NULL,
-    nombre      VARCHAR2(20 CHAR) NOT NULL,
-    descripcion VARCHAR2(50 CHAR)
+    nombre      VARCHAR2(50 CHAR) NOT NULL,
+    descripcion VARCHAR2(250 CHAR)
 );
 
 ALTER TABLE rutina ADD CONSTRAINT rutina_pk PRIMARY KEY ( id ) USING INDEX TABLESPACE TS_INDICES;
@@ -137,7 +137,7 @@ CREATE TABLE sesion (
     inicio                     DATE NOT NULL,
     fin                        DATE,
     presencial                 VARCHAR2(20 CHAR),
-    descripcion                VARCHAR2(50 CHAR),
+    descripcion                VARCHAR2(250 CHAR),
     video                      VARCHAR2(100 CHAR),
     datos_salud                VARCHAR2(100 CHAR),
     plan_inicio                DATE NOT NULL,
@@ -154,11 +154,11 @@ ALTER TABLE sesion
 
 CREATE TABLE usuario (
     id            INTEGER NOT NULL,
-    nombre        VARCHAR2(20 CHAR) NOT NULL,
-    apellidos     VARCHAR2(40 CHAR) NOT NULL,
-    telefono      VARCHAR2(12 CHAR) NOT NULL,
+    nombre        VARCHAR2(50 CHAR) NOT NULL,
+    apellidos     VARCHAR2(50 CHAR) NOT NULL,
+    telefono      VARCHAR2(20 CHAR) NOT NULL,
     direccion     VARCHAR2(50 CHAR),
-    correoe       VARCHAR2(50 CHAR),
+    correoe       VARCHAR2(60 CHAR),
     usuariooracle VARCHAR2(30 CHAR)
 );
 
