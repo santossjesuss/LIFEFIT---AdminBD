@@ -8,7 +8,7 @@ CREATE ROLE entrenador_nutricion;
 CREATE ROLE cliente;
 
 -- Permisos de administrador
-GRANT CREATE SESSION, CONNECT, SELECT, INSERT, UPDATE, DELETE TO administrador WITH GRANT OPTION;
+GRANT CREATE SESSION, CONNECT TO administrador WITH ADMIN OPTION;
 
 -- Asignamos rol a LIFEEFIT:
 GRANT administrador TO LIFEFIT;
@@ -30,7 +30,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON cliente TO gerente;
 GRANT SELECT, UPDATE(tipo) ON dieta TO entrenador_deporte;
 
 CREATE VIEW VCLIENTES_ENTRENADOR AS SELECT * FROM cliente WHERE id = (SELECT cliente_id FROM entrena WHERE entrenador_id = (SELECT id FROM usuario WHERE usuariooracle = USER));
-GRANT SELECT, UPDATE(dieta_id) ON VCLIENTE TO entrenador_deporte;
+GRANT SELECT, UPDATE(dieta_id) ON VCLIENTES_ENTRENADOR TO entrenador_deporte;
 
 -- Gestión dieta
 GRANT SELECT, INSERT, UPDATE, DELETE ON dieta TO entrenador_nutricion;
