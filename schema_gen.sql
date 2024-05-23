@@ -142,8 +142,8 @@ CREATE TABLE sesion (
     fin                        DATE,
     presencial                 VARCHAR2(20 CHAR),
     descripcion                VARCHAR2(250 CHAR),
-    video                      VARCHAR2(100 CHAR),
-    datos_salud                VARCHAR2(100 CHAR),
+    video                      VARCHAR2(100 CHAR) ENCRYPT,
+    datos_salud                VARCHAR2(100 CHAR) ENCRYPT,
     plan_inicio                DATE NOT NULL,
     plan_rutina_id             INTEGER NOT NULL,
     plan_entrena_entrenador_id INTEGER NOT NULL,
@@ -163,7 +163,7 @@ CREATE TABLE usuario (
     nombre        VARCHAR2(50 CHAR) NOT NULL,
     apellidos     VARCHAR2(50 CHAR) NOT NULL,
     telefono      VARCHAR2(20 CHAR) NOT NULL UNIQUE,
-    direccion     VARCHAR2(50 CHAR),
+    direccion     VARCHAR2(50 CHAR) ENCRYPT,
     correoe       VARCHAR2(60 CHAR) UNIQUE,
     usuariooracle VARCHAR2(30 CHAR)
 );
