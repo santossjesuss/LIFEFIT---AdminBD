@@ -83,7 +83,9 @@ ALTER TABLE elementocalen ADD CONSTRAINT elementocalendario_pk PRIMARY KEY ( fec
 CREATE TABLE entrena (
     especialidad  VARCHAR2(20 CHAR),
     entrenador_id INTEGER NOT NULL,
-    cliente_id    INTEGER NOT NULL
+    cliente_id    INTEGER NOT NULL,
+    
+    CONSTRAINT especialidad_ck CHECK (especialidad IN ('NUTRICION', 'ENTRENAMIENTO', ' FITNESS'))
 );
 
 ALTER TABLE entrena ADD CONSTRAINT entrena_pk PRIMARY KEY ( entrenador_id,
@@ -113,10 +115,12 @@ ALTER TABLE gerente ADD CONSTRAINT gerente_pk PRIMARY KEY ( id ) USING INDEX TAB
 
 CREATE TABLE plan (
     inicio                DATE NOT NULL,
-    fin                   VARCHAR2(20 CHAR),
+    fin                   DATE,
     rutina_id             INTEGER NOT NULL,
     entrena_entrenador_id INTEGER NOT NULL,
-    entrena_cliente_id    INTEGER NOT NULL
+    entrena_cliente_id    INTEGER NOT NULL,
+
+    CONSTRAINT fechas_validas_ck CHECK (fin > inicio);
 );
 
 ALTER TABLE plan
@@ -143,7 +147,9 @@ CREATE TABLE sesion (
     plan_inicio                DATE NOT NULL,
     plan_rutina_id             INTEGER NOT NULL,
     plan_entrena_entrenador_id INTEGER NOT NULL,
-    plan_entrena_cliente_id    INTEGER NOT NULL
+    plan_entrena_cliente_id    INTEGER NOT NULL,
+
+    CONSTRAINT sesion_presenc_ck CHECK (presencial IN (0,1))
 );
 
 ALTER TABLE sesion
@@ -156,9 +162,9 @@ CREATE TABLE usuario (
     id            INTEGER NOT NULL,
     nombre        VARCHAR2(50 CHAR) NOT NULL,
     apellidos     VARCHAR2(50 CHAR) NOT NULL,
-    telefono      VARCHAR2(20 CHAR) NOT NULL,
+    telefono      VARCHAR2(20 CHAR) NOT NULL UNIQUE,
     direccion     VARCHAR2(50 CHAR),
-    correoe       VARCHAR2(60 CHAR),
+    correoe       VARCHAR2(60 CHAR) UNIQUE,
     usuariooracle VARCHAR2(30 CHAR)
 );
 
