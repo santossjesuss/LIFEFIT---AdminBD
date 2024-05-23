@@ -45,3 +45,7 @@
 @secuencia
 @base 
 @base_body
+
+------------------------------------------------Seguridad
+-- Desde LIFEFIT --
+@seguridad
