@@ -9,6 +9,8 @@ CREATE ROLE cliente;
 
 -- Permisos de administrador
 GRANT CREATE SESSION, CONNECT TO administrador WITH ADMIN OPTION;
+GRANT CREATE USER TO administrador;
+GRANT DROP USER TO administrador;
 
 -- Asignamos rol a LIFEEFIT:
 GRANT administrador TO LIFEFIT;
