@@ -41,7 +41,7 @@ create or replace PACKAGE BASE AS
         CORREOE USUARIO.CORREOE%TYPE,
         DESPACHO GERENTE.DESPACHO%TYPE,
         HORARIO GERENTE.HORARIO%TYPE,
-        CENTRO GERENTE.CENTRO_id%TYPE -- Cambiado a CENTRO_ID
+        CENTRO GERENTE.CENTRO_ID%TYPE -- Cambiado a CENTRO_ID
     );
 
     -- Procedimiento para crear un cliente
@@ -51,7 +51,7 @@ create or replace PACKAGE BASE AS
         P_USUARIO  OUT USUARIO%ROWTYPE,
         P_CLIENTE  OUT CLIENTE%ROWTYPE
     );
-    /*
+    
     --Procedimiento para crear un entrenador
     
     PROCEDURE CREA_ENTRENADOR(
@@ -60,6 +60,7 @@ create or replace PACKAGE BASE AS
         P_USUARIO OUT USUARIO%ROWTYPE,
         P_ENTRENADOR OUT ENTRENADOR%ROWTYPE
     );
+    
     
     --Procedimiento para crear un gerente
     
@@ -70,9 +71,10 @@ create or replace PACKAGE BASE AS
         P_GERENTE OUT GERENTE%ROWTYPE
     );
 
+    /*
     PROCEDURE ELIMINA_USER(P_ID USUARIO.ID%TYPE);
     PROCEDURE ELIMINA_CLIENTE(P_ID USUARIO.ID%TYPE);
     PROCEDURE ELIMINA_GERENTE(P_ID USUARIO.ID%TYPE);
-    PROCEDURE ELIMINA_ENTRENADOR(P_ID USUARIO.ID%TYPE);
-    */
+    PROCEDURE ELIMINA_ENTRENADOR(P_ID USUARIO.ID%TYPE); */
+    
 END BASE;

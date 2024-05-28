@@ -35,5 +35,10 @@ BEGIN
 END;
 /
 
+--Consulta para ver las politicas de seguridad
+SELECT * FROM USER_POLICIES WHERE object_name = 'GERENTE';
+
+
+
 
 

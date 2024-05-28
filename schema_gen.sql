@@ -101,8 +101,8 @@ ALTER TABLE entrenador ADD CONSTRAINT entrenador_pk PRIMARY KEY ( id ) USING IND
 
 CREATE TABLE gerente (
     id        INTEGER NOT NULL,
-    despacho  VARCHAR2(12 CHAR),
-    horario   VARCHAR2(20 CHAR),
+    despacho  VARCHAR2(50 CHAR),
+    horario   VARCHAR2(50 CHAR),
     centro_id INTEGER NOT NULL
 );
 

@@ -3,9 +3,6 @@
 -- Creamos roles:
 CREATE ROLE administrador;
 
--- Permisos de administrador
-GRANT CREATE SESSION, CONNECT TO administrador WITH ADMIN OPTION;
-
 -- Cuando un privilegio administrativo se otorga a un rol, y luego el rol se otorga a un usuario, 
 -- el usuario no puede ejercer ese privilegio administrativo. Esto es una medida de seguridad para 
 -- prevenir que usuarios adquieran accidentalmente privilegios poderosos.

@@ -5,10 +5,3 @@ DROP TABLESPACE TS_INDICES INCLUDING CONTENTS AND DATAFILES;
 
 --eliminamos roles
 DROP ROLE administrador;
-DROP ROLE gerente;
-DROP ROLE entrenador_deporte;
-DROP ROLE entrenador_nutricion;
-DROP ROLE cliente;
-
---eliminamos secuencias
-DROP SEQUENCE S_EJERCICIOS;

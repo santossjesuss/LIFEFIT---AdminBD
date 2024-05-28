@@ -45,7 +45,6 @@ create or replace PACKAGE BODY BASE AS
                 DBMS_OUTPUT.PUT_LINE('Error al crear el cliente');
         END;
 
-        DBMS_OUTPUT.PUT_LINE('Usuario creado: ' || v_usuariooracle);
         -- Asignar el rol de cliente al usuario
         EXECUTE IMMEDIATE 'GRANT cliente TO ' || v_usuariooracle;
 
@@ -68,7 +67,7 @@ create or replace PACKAGE BODY BASE AS
         WHEN EXCEPCION_CREACION THEN
             -- Si se produce una excepción, realizar rollback
             ROLLBACK;
-            DBMS_OUTPUT.PUT_LINE('EXCEPTION_CREATION: Error al crear el cliente');
+            DBMS_OUTPUT.PUT_LINE('EXCEPCION_CREACION: correoe o telefono ya existen');
         
         WHEN OTHERS THEN
             -- Si se produce una excepción, realizar rollback
@@ -80,7 +79,6 @@ create or replace PACKAGE BODY BASE AS
 
     END CREA_CLIENTE;
     
-    /*
 
     --Implementación del procedimiento CREAR_ENTRENADOR
     PROCEDURE CREA_ENTRENADOR(
@@ -93,59 +91,78 @@ create or replace PACKAGE BODY BASE AS
         v_usuario_id USUARIO.ID%TYPE;
         v_entrenador_id ENTRENADOR.ID%TYPE;
         v_usuariooracle USUARIO.USUARIOORACLE%TYPE; -- Variable para el nombre de usuario Oracle
-    BEGIN
-    
-            SAVEPOINT EXCEPCION_CREACION; -- Crear un punto de guardado para rollback
-    
-            -- Obtener el próximo valor de la secuencia para el ID del usuario y entrenador
-            SELECT usuario_seq.NEXTVAL INTO v_usuario_id FROM dual;
-            v_entrenador_id := v_usuario_id; -- El ID del entrenador es igual al ID del usuario
-    
-            -- Crear el nombre de usuario Oracle
-            v_usuariooracle := 'LIFEFIT_' || v_usuario_id;
-    
-            -- Crear el usuario
-            BEGIN
-                EXECUTE IMMEDIATE 'CREATE USER ' || v_usuariooracle || ' IDENTIFIED BY ' || P_USERPASS || ' DEFAULT TABLESPACE TS_LIFEFIT QUOTA UNLIMITED ON TS_LIFEFIT';
-            EXCEPTION
-                WHEN OTHERS THEN
-                    ROLLBACK TO SAVEPOINT EXCEPCION_CREACION; -- Rollback si hay errores
-    
-                    -- Si falla la creación del usuario, manejar el error
-                    DBMS_OUTPUT.PUT_LINE('Error al crear el entrenador');
-                    RAISE EXCEPCION_CREACION;
-            END;
+        v_countcorreo INTEGER; -- Variable para comprobar el correo electrónico
+        v_counttelefono INTEGER; -- Variable para comprobar el teléfono
 
-            -- Asignar el rol de entrenador al usuario
-            EXECUTE IMMEDIATE 'GRANT entrenador_deporte TO ' || v_usuariooracle;
-            EXECUTE IMMEDIATE 'GRANT entrenador_nutricion TO ' || v_usuariooracle;
-    
-            -- Insertar usuario
-            INSERT INTO usuario (id, nombre, apellidos, telefono, direccion, correoe, usuariooracle)
-            VALUES (v_usuario_id, P_DATOS.NOMBRE, P_DATOS.APELLIDOS, P_DATOS.TELEFONO, P_DATOS.DIRECCION, P_DATOS.CORREOE, v_usuariooracle);
-            
-            -- Insertar entrenador
-            INSERT INTO entrenador (id, disponibilidad, centro_id)
-            VALUES (v_entrenador_id, P_DATOS.DISPONIBILIDAD, P_DATOS.CENTRO);
-    
-            -- Commit de la transacción autónoma para confirmar cambios
-            COMMIT;
-    
-            -- Recuperar los datos de usuario y entrenador
-            SELECT * INTO P_USUARIO FROM usuario WHERE id = v_usuario_id;
-            SELECT * INTO P_ENTRENADOR FROM entrenador WHERE id = v_entrenador_id;
+    BEGIN
+
+        -- Mirar si el correo ya existe, si existe, lanzar excepción
+        SELECT COUNT(*) INTO v_countcorreo FROM USUARIO WHERE correoe = P_DATOS.CORREOE;
+        IF v_countcorreo > 0 THEN
+            RAISE EXCEPCION_CREACION;
+        END IF;
+
+        -- Mirar si el correo ya existe, si existe, lanzar excepción
+        SELECT COUNT(*) INTO v_counttelefono FROM USUARIO WHERE telefono = P_DATOS.TELEFONO;
+        IF v_counttelefono > 0 THEN
+            RAISE EXCEPCION_CREACION;
+        END IF;
+
+        -- Obtener el próximo valor de la secuencia para el ID del usuario y entrenador
+        SELECT usuario_seq.NEXTVAL INTO v_usuario_id FROM dual;
+        v_entrenador_id := v_usuario_id; -- El ID del entrenador es igual al ID del usuario
+
+        -- Crear el nombre de usuario Oracle
+        v_usuariooracle := 'LIFEFIT_' || v_usuario_id;
+
+        -- Crear el usuario
+        BEGIN
+            EXECUTE IMMEDIATE 'CREATE USER ' || v_usuariooracle || ' IDENTIFIED BY ' || P_USERPASS || ' DEFAULT TABLESPACE TS_LIFEFIT QUOTA UNLIMITED ON TS_LIFEFIT';
+        EXCEPTION
+            WHEN OTHERS THEN
+                ROLLBACK; -- Rollback si hay errores
+
+                -- Si falla la creación del usuario, manejar el error
+                DBMS_OUTPUT.PUT_LINE('Error al crear el entrenador');
+        END;
+
+        -- Asignar el rol de entrenador al usuario
+        EXECUTE IMMEDIATE 'GRANT entrenador_nutricion TO ' || v_usuariooracle;
+        EXECUTE IMMEDIATE 'GRANT entrenador_deporte TO ' || v_usuariooracle;
+
+        -- Insertar usuario
+        INSERT INTO usuario (id, nombre, apellidos, telefono, direccion, correoe, usuariooracle)
+        VALUES (v_usuario_id, P_DATOS.NOMBRE, P_DATOS.APELLIDOS, P_DATOS.TELEFONO, P_DATOS.DIRECCION, P_DATOS.CORREOE, v_usuariooracle);
+
+        -- Insertar entrenador
+        INSERT INTO entrenador (id, disponibilidad, centro_id)
+        VALUES (v_entrenador_id, P_DATOS.DISPONIBILIDAD, P_DATOS.CENTRO);
+        DBMS_OUTPUT.PUT_LINE('Gerente insertado correctamente');
+
+
+        -- Commit de la transacción autónoma para confirmar cambios
+        COMMIT;
+
+        -- Recuperar los datos de usuario y entrenador
+        SELECT * INTO P_USUARIO FROM usuario WHERE id = v_usuario_id;
+        SELECT * INTO P_ENTRENADOR FROM entrenador WHERE id = v_entrenador_id;
 
     EXCEPTION
+        WHEN EXCEPCION_CREACION THEN
+            -- Si se produce una excepción, realizar rollback
+            ROLLBACK;
+            DBMS_OUTPUT.PUT_LINE('EXCEPCION_CREACION: Correoe o telefono ya existen');
+        
         WHEN OTHERS THEN
             -- Si se produce una excepción, realizar rollback
-            ROLLBACK TO SAVEPOINT EXCEPCION_CREACION;
+            ROLLBACK;
             
             -- Eliminar el usuario creado si la excepción ocurre después de la creación
-            EXECUTE IMMEDIATE 'DROP USER ' || P_DATOS.NOMBRE || ' CASCADE';
-            DBMS_OUTPUT.PUT_LINE('Error al eliminar el entrenador creado');
-            RAISE EXCEPCION_ELIMINACION;
+            EXECUTE IMMEDIATE 'DROP USER ' || v_usuariooracle || ' CASCADE';
+            DBMS_OUTPUT.PUT_LINE('OTHERS: Error al crear el entrenador');
+
     END CREA_ENTRENADOR;
-    
+
 
     --Implementación del procedimiento CREAR_GERENTE
     PROCEDURE CREA_GERENTE(
@@ -157,44 +174,78 @@ create or replace PACKAGE BODY BASE AS
         PRAGMA AUTONOMOUS_TRANSACTION;
         v_usuario_id USUARIO.ID%TYPE;
         v_gerente_id GERENTE.ID%TYPE;
-        v_usuariooracle USUARIO.USUARIOORACLE%TYPE;
+        v_usuariooracle USUARIO.USUARIOORACLE%TYPE; -- Variable para el nombre de usuario Oracle
+        v_countcorreo INTEGER; -- Variable para comprobar el correo electrónico
+        v_counttelefono INTEGER; -- Variable para comprobar el teléfono
+
     BEGIN
-        SAVEPOINT EXCEPCION_CREACION;
-        
+
+        -- Mirar si el correo ya existe, si existe, lanzar excepción
+        SELECT COUNT(*) INTO v_countcorreo FROM USUARIO WHERE correoe = P_DATOS.CORREOE;
+        IF v_countcorreo > 0 THEN
+            RAISE EXCEPCION_CREACION;
+        END IF;
+
+        -- Mirar si el correo ya existe, si existe, lanzar excepción
+        SELECT COUNT(*) INTO v_counttelefono FROM USUARIO WHERE telefono = P_DATOS.TELEFONO;
+        IF v_counttelefono > 0 THEN
+            RAISE EXCEPCION_CREACION;
+        END IF;
+
+        -- Obtener el próximo valor de la secuencia para el ID del usuario y gerente
         SELECT usuario_seq.NEXTVAL INTO v_usuario_id FROM dual;
-        v_gerente_id := v_usuario_id;
-        
+        v_gerente_id := v_usuario_id; -- El ID del gerente es igual al ID del usuario
+
+        -- Crear el nombre de usuario Oracle
         v_usuariooracle := 'LIFEFIT_' || v_usuario_id;
-        
+
+        -- Crear el usuario
         BEGIN
             EXECUTE IMMEDIATE 'CREATE USER ' || v_usuariooracle || ' IDENTIFIED BY ' || P_USERPASS || ' DEFAULT TABLESPACE TS_LIFEFIT QUOTA UNLIMITED ON TS_LIFEFIT';
         EXCEPTION
             WHEN OTHERS THEN
-                ROLLBACK TO SAVEPOINT EXCEPCION_CREACION;
+                ROLLBACK; -- Rollback si hay errores
+
+                -- Si falla la creación del usuario, manejar el error
                 DBMS_OUTPUT.PUT_LINE('Error al crear el gerente');
-                RAISE EXCEPCION_CREACION;
         END;
-        
+
+        -- Asignar el rol de gerente al usuario
         EXECUTE IMMEDIATE 'GRANT gerente TO ' || v_usuariooracle;
 
+        -- Insertar usuario
         INSERT INTO usuario (id, nombre, apellidos, telefono, direccion, correoe, usuariooracle)
         VALUES (v_usuario_id, P_DATOS.NOMBRE, P_DATOS.APELLIDOS, P_DATOS.TELEFONO, P_DATOS.DIRECCION, P_DATOS.CORREOE, v_usuariooracle);
-        
+
+        -- Insertar gerente
         INSERT INTO gerente (id, despacho, horario, centro_id)
         VALUES (v_gerente_id, P_DATOS.DESPACHO, P_DATOS.HORARIO, P_DATOS.CENTRO);
-        
+
+        -- Commit de la transacción autónoma para confirmar cambios
         COMMIT;
-        
+
+        -- Recuperar los datos de usuario y gerente
         SELECT * INTO P_USUARIO FROM usuario WHERE id = v_usuario_id;
         SELECT * INTO P_GERENTE FROM gerente WHERE id = v_gerente_id;
 
     EXCEPTION
+        WHEN EXCEPCION_CREACION THEN
+            -- Si se produce una excepción, realizar rollback
+            ROLLBACK;
+            DBMS_OUTPUT.PUT_LINE('EXCEPCION_CREACION: Correoe o telefono ya existen');
+        
         WHEN OTHERS THEN
-            ROLLBACK TO SAVEPOINT EXCEPCION_CREACION;
-            EXECUTE IMMEDIATE 'DROP USER ' || P_DATOS.NOMBRE || ' CASCADE';
-            DBMS_OUTPUT.PUT_LINE('Error al eliminar el gerente creado');
-            RAISE EXCEPCION_ELIMINACION;
+            -- Si se produce una excepción, realizar rollback
+            ROLLBACK;
+            
+            -- Eliminar el usuario creado si la excepción ocurre después de la creación
+            EXECUTE IMMEDIATE 'DROP USER ' || v_usuariooracle || ' CASCADE';
+            DBMS_OUTPUT.PUT_LINE('OTHERS: Error al crear el gerente');
+
     END CREA_GERENTE;
+
+    /*
+
 
     --Implementación del procedimiento de eliminación de usuario
     PROCEDURE ELIMINA_USER(P_ID USUARIO.ID%TYPE) IS
@@ -340,3 +391,4 @@ create or replace PACKAGE BODY BASE AS
     */
 
 END BASE;
+/
