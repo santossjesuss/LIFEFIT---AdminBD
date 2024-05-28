@@ -574,5 +574,45 @@ create or replace PACKAGE BODY BASE AS
 
     END ELIMINA_ENTRENADOR;
 
+    -- Implementación del procedimiento de elimina centro usando las funciones anteriores
+    PROCEDURE ELIMINA_CENTRO(P_ID CENTRO.ID%TYPE) IS
+        v_gerente_id USUARIO.ID%TYPE;
+        v_cliente_id USUARIO.ID%TYPE;
+
+    BEGIN
+        
+        -- Obtener el ID del usuario del gerente del centro
+        BEGIN
+            SELECT gerente_id INTO v_gerente_id FROM centro WHERE id = P_ID;
+        EXCEPTION
+            WHEN OTHERS THEN
+                RAISE EXCEPCION_LECTURA;
+        END;
+
+        -- Eliminar el gerente
+        BEGIN
+            BASE.ELIMINA_GERENTE(v_gerente_id);
+        EXCEPTION
+            WHEN OTHERS THEN
+                RAISE EXCEPCION_ELIMINACION;
+        END;
+
+        -- Obtener los IDs de los usuarios de los clientes del centro
+        BEGIN
+            SELECT id INTO v_cliente_id FROM cliente WHERE centro_id = P_ID;
+        EXCEPTION
+            WHEN OTHERS THEN
+            RAISE EXCEPCION_LECTURA;
+        END;
+
+        -- Eliminar los clientesccon un bucle
+        BEGIN
+            BASE.ELIMINA_CLIENTE(v_cliente_id);
+        EXCEPTION
+            WHEN OTHERS THEN
+                RAISE EXCEPCION_ELIMINACION;
+        END;
+
+
 END BASE;
 /
