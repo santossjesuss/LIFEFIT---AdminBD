@@ -88,3 +88,27 @@ BEGIN
 
 END;
 /
+
+-- Prueba eliminación de usuario
+set serveroutput on
+
+DECLARE
+    -- Declarar una variable para el ID del usuario a eliminar
+    v_id USUARIO.ID%TYPE := 51;
+BEGIN
+    -- Llamar al procedimiento ELIMINA_USER
+    BASE.ELIMINA_USER(v_id);
+END;
+/
+
+-- Prueba eliminación de cliente
+set serveroutput on
+
+DECLARE
+    -- Declarar una variable para el ID del cliente a eliminar
+    v_id USUARIO.ID%TYPE := 31;
+BEGIN
+    -- Llamar al procedimiento ELIMINA_CLIENTE
+    BASE.ELIMINA_CLIENTE(v_id);
+END;
+/

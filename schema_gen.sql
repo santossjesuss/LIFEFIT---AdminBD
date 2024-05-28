@@ -22,13 +22,13 @@ CREATE TABLE cita (
     fechayhora DATE NOT NULL,
     id         INTEGER NOT NULL,
     modalidad  VARCHAR2(20 CHAR),
-    cliente_id INTEGER NOT NULL
+    cliente_id INTEGER NOT NULL,
+
+    CONSTRAINT fechayhora_ck CHECK (fechayhora > SYSDATE)
 );
 
 ALTER TABLE cita ADD CONSTRAINT cita_pk PRIMARY KEY ( fechayhora,
-                                                      id ) USING INDEX TABLESPACE TS_INDICES;
-
-ALTER TABLE cita ADD CONSTRAINT cita_pkv1 UNIQUE ( cliente_id ) USING INDEX TABLESPACE TS_INDICES;
+                                                      id, cliente_id ) USING INDEX TABLESPACE TS_INDICES;
 
 CREATE TABLE cliente (
     id           INTEGER NOT NULL,
@@ -85,7 +85,7 @@ CREATE TABLE entrena (
     entrenador_id INTEGER NOT NULL,
     cliente_id    INTEGER NOT NULL,
     
-    CONSTRAINT especialidad_ck CHECK (especialidad IN ('NUTRICION', 'ENTRENAMIENTO', ' FITNESS'))
+    CONSTRAINT especialidad_ck CHECK (especialidad IN ('NUTRICION', 'ENTRENAMIENTO', 'FITNESS'))
 );
 
 ALTER TABLE entrena ADD CONSTRAINT entrena_pk PRIMARY KEY ( entrenador_id,
@@ -149,7 +149,7 @@ CREATE TABLE sesion (
     plan_entrena_entrenador_id INTEGER NOT NULL,
     plan_entrena_cliente_id    INTEGER NOT NULL,
 
-    CONSTRAINT sesion_presenc_ck CHECK (presencial IN (0,1))
+    CONSTRAINT sesion_presenc_ck CHECK (presencial IN ('Sí', 'No'))
 );
 
 ALTER TABLE sesion

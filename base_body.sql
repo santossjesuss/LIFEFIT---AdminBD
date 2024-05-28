@@ -39,43 +39,64 @@ create or replace PACKAGE BODY BASE AS
             EXECUTE IMMEDIATE 'CREATE USER ' || v_usuariooracle || ' IDENTIFIED BY ' || P_USERPASS || ' DEFAULT TABLESPACE TS_LIFEFIT QUOTA UNLIMITED ON TS_LIFEFIT';
         EXCEPTION
             WHEN OTHERS THEN
-                ROLLBACK; -- Rollback si hay errores
-
-                -- Si falla la creación del usuario, manejar el error
-                DBMS_OUTPUT.PUT_LINE('Error al crear el cliente');
+                RAISE EXCEPCION_CREACION;
         END;
 
         -- Asignar el rol de cliente al usuario
         EXECUTE IMMEDIATE 'GRANT cliente TO ' || v_usuariooracle;
 
-        -- Insertar usuario
-        INSERT INTO usuario (id, nombre, apellidos, telefono, direccion, correoe, usuariooracle)
-        VALUES (v_usuario_id, P_DATOS.NOMBRE, P_DATOS.APELLIDOS, P_DATOS.TELEFONO, P_DATOS.DIRECCION, P_DATOS.CORREOE, v_usuariooracle);
-        
-        -- Insertar cliente
-        INSERT INTO cliente (id, objetivo, preferencias, dieta_id, centro_id)
-        VALUES (v_cliente_id, P_DATOS.OBJETIVOS, P_DATOS.PREFERENCIAS, P_DATOS.DIETA, P_DATOS.CENTRO);
+        BEGIN
+            -- Insertar usuario
+            INSERT INTO usuario (id, nombre, apellidos, telefono, direccion, correoe, usuariooracle)
+            VALUES (v_usuario_id, P_DATOS.NOMBRE, P_DATOS.APELLIDOS, P_DATOS.TELEFONO, P_DATOS.DIRECCION, P_DATOS.CORREOE, v_usuariooracle);
+            
+            -- Insertar cliente
+            INSERT INTO cliente (id, objetivo, preferencias, dieta_id, centro_id)
+            VALUES (v_cliente_id, P_DATOS.OBJETIVOS, P_DATOS.PREFERENCIAS, P_DATOS.DIETA, P_DATOS.CENTRO);
+        EXCEPTION
+            WHEN OTHERS THEN
+                RAISE EXCEPCION_MODIFICACION;
+        END;
+
+        -- Recuperar los datos de usuario y cliente
+        BEGIN
+            SELECT * INTO P_USUARIO FROM usuario WHERE id = v_usuario_id;
+            SELECT * INTO P_CLIENTE FROM cliente WHERE id = v_cliente_id;
+        EXCEPTION
+            WHEN OTHERS THEN
+                RAISE EXCEPCION_LECTURA;
+        END;
 
         -- Commit de la transacción autónoma para confirmar cambios
         COMMIT;
-
-        -- Recuperar los datos de usuario y cliente
-        SELECT * INTO P_USUARIO FROM usuario WHERE id = v_usuario_id;
-        SELECT * INTO P_CLIENTE FROM cliente WHERE id = v_cliente_id;
 
     EXCEPTION
         WHEN EXCEPCION_CREACION THEN
             -- Si se produce una excepción, realizar rollback
             ROLLBACK;
-            DBMS_OUTPUT.PUT_LINE('EXCEPCION_CREACION: correoe o telefono ya existen');
-        
-        WHEN OTHERS THEN
+            DBMS_OUTPUT.PUT_LINE('EXCEPCION_CREACION');
+
+
+        WHEN EXCEPCION_MODIFICACION THEN
             -- Si se produce una excepción, realizar rollback
             ROLLBACK;
             
             -- Eliminar el usuario creado si la excepción ocurre después de la creación
             EXECUTE IMMEDIATE 'DROP USER ' || v_usuariooracle || ' CASCADE';
-            DBMS_OUTPUT.PUT_LINE('OTHERS: Error al crear el cliente');
+            DBMS_OUTPUT.PUT_LINE('EXCEPCION_MODIFICACION: Error al modificar tablas');
+
+        WHEN EXCEPCION_LECTURA THEN
+            -- Si se produce una excepción, realizar rollback
+            ROLLBACK;
+
+            -- Eliminar el usuario creado si la excepción ocurre después de la creación
+            EXECUTE IMMEDIATE 'DROP USER ' || v_usuariooracle || ' CASCADE';
+            DBMS_OUTPUT.PUT_LINE('EXCEPCION_LECTURA: Error al leer');
+
+        WHEN OTHERS THEN
+            -- Si se produce una excepción, realizar rollback
+            ROLLBACK;
+            DBMS_OUTPUT.PUT_LINE('OTHERS: Error inesperado');
 
     END CREA_CLIENTE;
     
@@ -120,46 +141,67 @@ create or replace PACKAGE BODY BASE AS
             EXECUTE IMMEDIATE 'CREATE USER ' || v_usuariooracle || ' IDENTIFIED BY ' || P_USERPASS || ' DEFAULT TABLESPACE TS_LIFEFIT QUOTA UNLIMITED ON TS_LIFEFIT';
         EXCEPTION
             WHEN OTHERS THEN
-                ROLLBACK; -- Rollback si hay errores
-
-                -- Si falla la creación del usuario, manejar el error
-                DBMS_OUTPUT.PUT_LINE('Error al crear el entrenador');
+                RAISE EXCEPCION_CREACION;
         END;
 
         -- Asignar el rol de entrenador al usuario
         EXECUTE IMMEDIATE 'GRANT entrenador_nutricion TO ' || v_usuariooracle;
         EXECUTE IMMEDIATE 'GRANT entrenador_deporte TO ' || v_usuariooracle;
 
-        -- Insertar usuario
-        INSERT INTO usuario (id, nombre, apellidos, telefono, direccion, correoe, usuariooracle)
-        VALUES (v_usuario_id, P_DATOS.NOMBRE, P_DATOS.APELLIDOS, P_DATOS.TELEFONO, P_DATOS.DIRECCION, P_DATOS.CORREOE, v_usuariooracle);
+        BEGIN
+            -- Insertar usuario
+            INSERT INTO usuario (id, nombre, apellidos, telefono, direccion, correoe, usuariooracle)
+            VALUES (v_usuario_id, P_DATOS.NOMBRE, P_DATOS.APELLIDOS, P_DATOS.TELEFONO, P_DATOS.DIRECCION, P_DATOS.CORREOE, v_usuariooracle);
 
-        -- Insertar entrenador
-        INSERT INTO entrenador (id, disponibilidad, centro_id)
-        VALUES (v_entrenador_id, P_DATOS.DISPONIBILIDAD, P_DATOS.CENTRO);
-        DBMS_OUTPUT.PUT_LINE('Gerente insertado correctamente');
+            -- Insertar entrenador
+            INSERT INTO entrenador (id, disponibilidad, centro_id)
+            VALUES (v_entrenador_id, P_DATOS.DISPONIBILIDAD, P_DATOS.CENTRO);
 
+        EXCEPTION
+            WHEN OTHERS THEN
+                RAISE EXCEPCION_MODIFICACION;
+        END;
+
+        BEGIN
+            -- Recuperar los datos de usuario y entrenador
+            SELECT * INTO P_USUARIO FROM usuario WHERE id = v_usuario_id;
+            SELECT * INTO P_ENTRENADOR FROM entrenador WHERE id = v_entrenador_id;
+        EXCEPTION
+            WHEN OTHERS THEN
+                RAISE EXCEPCION_LECTURA;
+        END;
 
         -- Commit de la transacción autónoma para confirmar cambios
         COMMIT;
 
-        -- Recuperar los datos de usuario y entrenador
-        SELECT * INTO P_USUARIO FROM usuario WHERE id = v_usuario_id;
-        SELECT * INTO P_ENTRENADOR FROM entrenador WHERE id = v_entrenador_id;
 
     EXCEPTION
         WHEN EXCEPCION_CREACION THEN
             -- Si se produce una excepción, realizar rollback
             ROLLBACK;
-            DBMS_OUTPUT.PUT_LINE('EXCEPCION_CREACION: Correoe o telefono ya existen');
-        
-        WHEN OTHERS THEN
+            DBMS_OUTPUT.PUT_LINE('EXCEPCION_CREACION');
+
+
+        WHEN EXCEPCION_MODIFICACION THEN
             -- Si se produce una excepción, realizar rollback
             ROLLBACK;
             
             -- Eliminar el usuario creado si la excepción ocurre después de la creación
             EXECUTE IMMEDIATE 'DROP USER ' || v_usuariooracle || ' CASCADE';
-            DBMS_OUTPUT.PUT_LINE('OTHERS: Error al crear el entrenador');
+            DBMS_OUTPUT.PUT_LINE('EXCEPCION_MODIFICACION: Error al modificar tablas');
+
+        WHEN EXCEPCION_LECTURA THEN
+            -- Si se produce una excepción, realizar rollback
+            ROLLBACK;
+
+            -- Eliminar el usuario creado si la excepción ocurre después de la creación
+            EXECUTE IMMEDIATE 'DROP USER ' || v_usuariooracle || ' CASCADE';
+            DBMS_OUTPUT.PUT_LINE('EXCEPCION_LECTURA: Error al leer');
+
+        WHEN OTHERS THEN
+            -- Si se produce una excepción, realizar rollback
+            ROLLBACK;
+            DBMS_OUTPUT.PUT_LINE('OTHERS: Error inesperado');
 
     END CREA_ENTRENADOR;
 
@@ -204,48 +246,333 @@ create or replace PACKAGE BODY BASE AS
             EXECUTE IMMEDIATE 'CREATE USER ' || v_usuariooracle || ' IDENTIFIED BY ' || P_USERPASS || ' DEFAULT TABLESPACE TS_LIFEFIT QUOTA UNLIMITED ON TS_LIFEFIT';
         EXCEPTION
             WHEN OTHERS THEN
-                ROLLBACK; -- Rollback si hay errores
-
-                -- Si falla la creación del usuario, manejar el error
-                DBMS_OUTPUT.PUT_LINE('Error al crear el gerente');
+                RAISE EXCEPCION_CREACION;
         END;
 
         -- Asignar el rol de gerente al usuario
         EXECUTE IMMEDIATE 'GRANT gerente TO ' || v_usuariooracle;
 
-        -- Insertar usuario
-        INSERT INTO usuario (id, nombre, apellidos, telefono, direccion, correoe, usuariooracle)
-        VALUES (v_usuario_id, P_DATOS.NOMBRE, P_DATOS.APELLIDOS, P_DATOS.TELEFONO, P_DATOS.DIRECCION, P_DATOS.CORREOE, v_usuariooracle);
+        BEGIN
+            -- Insertar usuario
+            INSERT INTO usuario (id, nombre, apellidos, telefono, direccion, correoe, usuariooracle)
+            VALUES (v_usuario_id, P_DATOS.NOMBRE, P_DATOS.APELLIDOS, P_DATOS.TELEFONO, P_DATOS.DIRECCION, P_DATOS.CORREOE, v_usuariooracle);
 
-        -- Insertar gerente
-        INSERT INTO gerente (id, despacho, horario, centro_id)
-        VALUES (v_gerente_id, P_DATOS.DESPACHO, P_DATOS.HORARIO, P_DATOS.CENTRO);
+            -- Insertar gerente
+            INSERT INTO gerente (id, despacho, horario, centro_id)
+            VALUES (v_gerente_id, P_DATOS.DESPACHO, P_DATOS.HORARIO, P_DATOS.CENTRO);
+        EXCEPTION
+            WHEN OTHERS THEN
+                RAISE EXCEPCION_MODIFICACION;
+        END;
+
+        BEGIN
+            -- Recuperar los datos de usuario y gerente
+            SELECT * INTO P_USUARIO FROM usuario WHERE id = v_usuario_id;
+            SELECT * INTO P_GERENTE FROM gerente WHERE id = v_gerente_id;
+        EXCEPTION
+            WHEN OTHERS THEN
+                RAISE EXCEPCION_LECTURA;
+        END;
 
         -- Commit de la transacción autónoma para confirmar cambios
         COMMIT;
 
-        -- Recuperar los datos de usuario y gerente
-        SELECT * INTO P_USUARIO FROM usuario WHERE id = v_usuario_id;
-        SELECT * INTO P_GERENTE FROM gerente WHERE id = v_gerente_id;
 
     EXCEPTION
         WHEN EXCEPCION_CREACION THEN
             -- Si se produce una excepción, realizar rollback
             ROLLBACK;
-            DBMS_OUTPUT.PUT_LINE('EXCEPCION_CREACION: Correoe o telefono ya existen');
-        
-        WHEN OTHERS THEN
+            DBMS_OUTPUT.PUT_LINE('EXCEPCION_CREACION');
+
+
+        WHEN EXCEPCION_MODIFICACION THEN
             -- Si se produce una excepción, realizar rollback
             ROLLBACK;
             
             -- Eliminar el usuario creado si la excepción ocurre después de la creación
             EXECUTE IMMEDIATE 'DROP USER ' || v_usuariooracle || ' CASCADE';
-            DBMS_OUTPUT.PUT_LINE('OTHERS: Error al crear el gerente');
+            DBMS_OUTPUT.PUT_LINE('EXCEPCION_MODIFICACION: Error al modificar tablas');
+
+        WHEN EXCEPCION_LECTURA THEN
+            -- Si se produce una excepción, realizar rollback
+            ROLLBACK;
+
+            -- Eliminar el usuario creado si la excepción ocurre después de la creación
+            EXECUTE IMMEDIATE 'DROP USER ' || v_usuariooracle || ' CASCADE';
+            DBMS_OUTPUT.PUT_LINE('EXCEPCION_LECTURA: Error al leer');
+
+        WHEN OTHERS THEN
+            -- Si se produce una excepción, realizar rollback
+            ROLLBACK;
+            DBMS_OUTPUT.PUT_LINE('OTHERS: Error inesperado');
 
     END CREA_GERENTE;
 
     --Implementación del procedimiento de eliminación de usuario
-    
+    PROCEDURE ELIMINA_USER(P_ID USUARIO.ID%TYPE) IS
+        v_usuariooracle USUARIO.USUARIOORACLE%TYPE;
+    BEGIN
+        BEGIN
+            -- Obtener el nombre de usuario Oracle
+            SELECT usuariooracle INTO v_usuariooracle FROM usuario WHERE id = P_ID;
+        EXCEPTION
+            WHEN OTHERS THEN
+                RAISE EXCEPCION_LECTURA;
+        END;
+
+        -- Eliminar el usuario
+        BEGIN
+            EXECUTE IMMEDIATE 'DROP USER ' || v_usuariooracle || ' CASCADE';
+        EXCEPTION
+            WHEN OTHERS THEN
+                RAISE EXCEPCION_ELIMINACION;
+        END;
+
+        BEGIN
+            -- Poner a null el usuariooracle en la tabla usuario
+            UPDATE usuario SET usuariooracle = NULL WHERE id = P_ID;
+        EXCEPTION
+            WHEN OTHERS THEN
+                RAISE EXCEPCION_MODIFICACION;
+        END;
+
+        COMMIT;
+
+    EXCEPTION
+        WHEN EXCEPCION_ELIMINACION THEN
+            DBMS_OUTPUT.PUT_LINE('EXCEPCION_ELIMINACION: Error al eliminar el usuario');
+
+        WHEN EXCEPCION_MODIFICACION THEN
+            DBMS_OUTPUT.PUT_LINE('EXCEPCION_MODIFICACION: Error al modificar tabla usuario');
+
+        WHEN EXCEPCION_LECTURA THEN
+            DBMS_OUTPUT.PUT_LINE('EXCEPCION_LECTURA: Error al leer tabla usuario');
+
+    END ELIMINA_USER;
+
+    -- Implementación del procedimiento de elimina cliente
+    PROCEDURE ELIMINA_CLIENTE(P_ID USUARIO.ID%TYPE) IS
+        v_usuariooracle USUARIO.USUARIOORACLE%TYPE;
+    BEGIN
+        BEGIN
+            -- Obtener el nombre de usuario Oracle
+            SELECT usuariooracle INTO v_usuariooracle FROM usuario WHERE id = P_ID;
+        EXCEPTION
+            WHEN OTHERS THEN
+                RAISE EXCEPCION_LECTURA;
+        END;
+
+        -- Eliminar el usuario
+        BEGIN
+            EXECUTE IMMEDIATE 'DROP USER ' || v_usuariooracle || ' CASCADE';
+        EXCEPTION
+            WHEN OTHERS THEN
+                RAISE EXCEPCION_ELIMINACION;
+        END;
+
+        BEGIN
+            -- Poner a null el usuariooracle en la tabla usuario
+            UPDATE usuario SET usuariooracle = NULL WHERE id = P_ID;
+        EXCEPTION
+            WHEN OTHERS THEN
+                RAISE EXCEPCION_MODIFICACION;
+        END;
+
+        BEGIN
+            -- Eliminar las citas
+            DELETE FROM cita WHERE cliente_id = P_ID;
+        EXCEPTION
+            WHEN OTHERS THEN
+                RAISE EXCEPCION_ELIMINACION;
+        END;
+
+        BEGIN
+            -- Eliminar el sesion
+            DELETE FROM sesion WHERE plan_entrena_cliente_id = P_ID;
+        EXCEPTION
+            WHEN OTHERS THEN
+                RAISE EXCEPCION_ELIMINACION;
+        END;
+
+        BEGIN
+            -- Eliminar el plan 
+            DELETE FROM plan WHERE entrena_cliente_id = P_ID;
+        EXCEPTION
+            WHEN OTHERS THEN
+                RAISE EXCEPCION_ELIMINACION;
+        END;
+
+        BEGIN
+            -- Eliminar el entrena
+            DELETE FROM entrena WHERE cliente_id = P_ID;
+        EXCEPTION
+            WHEN OTHERS THEN
+                RAISE EXCEPCION_ELIMINACION;
+        END;
+
+        BEGIN
+            -- Eliminar el cliente
+            DELETE FROM cliente WHERE id = P_ID;
+        EXCEPTION
+            WHEN OTHERS THEN
+                RAISE EXCEPCION_ELIMINACION;
+        END;
+
+        COMMIT;
+
+    EXCEPTION
+        WHEN EXCEPCION_ELIMINACION THEN
+            DBMS_OUTPUT.PUT_LINE('EXCEPCION_ELIMINACION: Error al eliminar el usuario');
+
+        WHEN EXCEPCION_MODIFICACION THEN
+            DBMS_OUTPUT.PUT_LINE('EXCEPCION_MODIFICACION: Error al modificar tabla usuario');
+
+        WHEN EXCEPCION_LECTURA THEN
+            DBMS_OUTPUT.PUT_LINE('EXCEPCION_LECTURA: Error al leer tabla usuario');
+
+    END ELIMINA_CLIENTE;
+
+
+    -- Implementación del procedimiento de elimina gerente
+    PROCEDURE ELIMINA_GERENTE(P_ID USUARIO.ID%TYPE) IS
+        v_usuariooracle USUARIO.USUARIOORACLE%TYPE;
+    BEGIN
+        BEGIN
+            -- Obtener el nombre de usuario Oracle
+            SELECT usuariooracle INTO v_usuariooracle FROM usuario WHERE id = P_ID;
+        EXCEPTION
+            WHEN OTHERS THEN
+                RAISE EXCEPCION_LECTURA;
+        END;
+
+        -- Eliminar el usuario
+        BEGIN
+            EXECUTE IMMEDIATE 'DROP USER ' || v_usuariooracle || ' CASCADE';
+        EXCEPTION
+            WHEN OTHERS THEN
+                RAISE EXCEPCION_ELIMINACION;
+        END;
+
+        BEGIN
+            -- Poner a null el usuariooracle en la tabla usuario
+            UPDATE usuario SET usuariooracle = NULL WHERE id = P_ID;
+        EXCEPTION
+            WHEN OTHERS THEN
+                RAISE EXCEPCION_MODIFICACION;
+        END;
+
+        BEGIN
+            -- Eliminar el gerente
+            DELETE FROM gerente WHERE id = P_ID;
+        EXCEPTION
+            WHEN OTHERS THEN
+                RAISE EXCEPCION_ELIMINACION;
+        END;
+
+        COMMIT;
+
+    EXCEPTION
+        WHEN EXCEPCION_ELIMINACION THEN
+            DBMS_OUTPUT.PUT_LINE('EXCEPCION_ELIMINACION: Error al eliminar el usuario');
+
+        WHEN EXCEPCION_MODIFICACION THEN
+            DBMS_OUTPUT.PUT_LINE('EXCEPCION_MODIFICACION: Error al modificar tabla usuario');
+
+        WHEN EXCEPCION_LECTURA THEN
+            DBMS_OUTPUT.PUT_LINE('EXCEPCION_LECTURA: Error al leer tabla usuario');
+
+    END ELIMINA_GERENTE;
+
+
+    -- Implementación del procedimiento de elimina entrenador
+    PROCEDURE ELIMINA_ENTRENADOR(P_ID USUARIO.ID%TYPE) IS
+        v_usuariooracle USUARIO.USUARIOORACLE%TYPE;
+    BEGIN
+        BEGIN
+            -- Obtener el nombre de usuario Oracle
+            SELECT usuariooracle INTO v_usuariooracle FROM usuario WHERE id = P_ID;
+        EXCEPTION
+            WHEN OTHERS THEN
+                RAISE EXCEPCION_LECTURA;
+        END;
+
+        -- Eliminar el usuario
+        BEGIN
+            EXECUTE IMMEDIATE 'DROP USER ' || v_usuariooracle || ' CASCADE';
+        EXCEPTION
+            WHEN OTHERS THEN
+                RAISE EXCEPCION_ELIMINACION;
+        END;
+
+        BEGIN
+            -- Poner a null el usuariooracle en la tabla usuario
+            UPDATE usuario SET usuariooracle = NULL WHERE id = P_ID;
+        EXCEPTION
+            WHEN OTHERS THEN
+                RAISE EXCEPCION_MODIFICACION;
+        END;
+
+        BEGIN
+            -- Eliminar los elementos calendario
+            DELETE FROM elementocalen WHERE entrenador_id = P_ID;
+        EXCEPTION
+            WHEN OTHERS THEN
+                RAISE EXCEPCION_ELIMINACION;
+        END;
+
+        BEGIN
+            -- Eliminar las citas
+            DELETE FROM cita WHERE id = P_ID;
+        EXCEPTION
+            WHEN OTHERS THEN
+                RAISE EXCEPCION_ELIMINACION;
+        END;
+
+        BEGIN
+            -- Eliminar las sesion
+            DELETE FROM sesion WHERE plan_entrena_entrenador_id = P_ID;
+        EXCEPTION
+            WHEN OTHERS THEN
+                RAISE EXCEPCION_ELIMINACION;
+        END;
+
+        BEGIN
+            -- Eliminar los planes
+            DELETE FROM plan WHERE entrena_entrenador_id = P_ID;
+        EXCEPTION
+            WHEN OTHERS THEN
+                RAISE EXCEPCION_ELIMINACION;
+        END;
+
+        BEGIN
+            -- Eliminar los entrena
+            DELETE FROM entrena WHERE entrenador_id = P_ID;
+        EXCEPTION
+            WHEN OTHERS THEN
+                RAISE EXCEPCION_ELIMINACION;
+        END;
+
+        BEGIN
+            -- Eliminar el entrenador
+            DELETE FROM entrenador WHERE id = P_ID;
+        EXCEPTION
+            WHEN OTHERS THEN
+                RAISE EXCEPCION_ELIMINACION;
+        END;
+
+        COMMIT;
+
+    EXCEPTION
+        WHEN EXCEPCION_ELIMINACION THEN
+            DBMS_OUTPUT.PUT_LINE('EXCEPCION_ELIMINACION: Error al eliminar el usuario');
+
+        WHEN EXCEPCION_MODIFICACION THEN
+            DBMS_OUTPUT.PUT_LINE('EXCEPCION_MODIFICACION: Error al modificar tabla usuario');
+
+        WHEN EXCEPCION_LECTURA THEN
+            DBMS_OUTPUT.PUT_LINE('EXCEPCION_LECTURA: Error al leer tabla usuario');
+
+    END ELIMINA_ENTRENADOR;
 
 END BASE;
 /
