@@ -10,7 +10,9 @@
 @schema_gen
 
 -- 3 - IMPORTACION DE DATOS
--- Desde el interfaz de usuario de Oracle SQL Developer --
+-- Desde el interfaz de usuario de Oracle SQL Developer para Usuario y Centro --
+-- Desde LIFEFIT (resto) --
+@insercion_datos
 
 -- 4 - TABLAS EXTERNAS
 -- LIFEFIT y SYSTEM (ver dentro del archivo)--

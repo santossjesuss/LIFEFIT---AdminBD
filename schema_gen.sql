@@ -120,7 +120,7 @@ CREATE TABLE plan (
     entrena_entrenador_id INTEGER NOT NULL,
     entrena_cliente_id    INTEGER NOT NULL,
 
-    CONSTRAINT fechas_validas_ck CHECK (fin > inicio);
+    CONSTRAINT fechas_validas_ck CHECK (fin > inicio)
 );
 
 ALTER TABLE plan
