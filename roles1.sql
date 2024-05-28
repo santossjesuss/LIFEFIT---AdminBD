@@ -2,18 +2,25 @@
 --------------------DESDE SYSTEM-------------------
 -- Creamos roles:
 CREATE ROLE administrador;
+
+-- Permisos de administrador
+GRANT CREATE SESSION, CONNECT TO administrador WITH ADMIN OPTION;
+
+-- Cuando un privilegio administrativo se otorga a un rol, y luego el rol se otorga a un usuario, 
+-- el usuario no puede ejercer ese privilegio administrativo. Esto es una medida de seguridad para 
+-- prevenir que usuarios adquieran accidentalmente privilegios poderosos.
+GRANT CREATE USER TO LIFEFIT;
+GRANT DROP USER TO LIFEFIT;
+
+-- Asignamos rol a LIFEEFIT:
+GRANT administrador TO LIFEFIT;
+
+--------------------DESDE LIFEFIT-------------------
+-- Creamos roles
 CREATE ROLE gerente;
 CREATE ROLE entrenador_deporte;
 CREATE ROLE entrenador_nutricion;
 CREATE ROLE cliente;
-
--- Permisos de administrador
-GRANT CREATE SESSION, CONNECT TO administrador;
-GRANT CREATE USER TO administrador;
-GRANT DROP USER TO administrador;
-
--- Asignamos rol a LIFEEFIT:
-GRANT administrador TO LIFEFIT WITH ADMIN OPTION;
 
 -- Asingamos permisos a los roles
 GRANT CREATE SESSION, CONNECT TO gerente;
@@ -21,7 +28,6 @@ GRANT CREATE SESSION, CONNECT TO entrenador_deporte;
 GRANT CREATE SESSION, CONNECT TO entrenador_nutricion;
 GRANT CREATE SESSION, CONNECT TO cliente;
 
---------------------DESDE LIFEFIT-------------------
 -- Responsabilidad Gerente
 GRANT SELECT, INSERT, UPDATE, DELETE ON centro TO gerente;
 GRANT SELECT, INSERT, UPDATE, DELETE ON entrenador TO gerente;

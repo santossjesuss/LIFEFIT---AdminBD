@@ -1,7 +1,7 @@
 --Consulta para ver la columna cifrada
 SELECT table_name, column_name, encryption_alg 
 FROM user_encrypted_columns 
-WHERE table_name = 'USUARIO';
+WHERE table_name = 'USUARIO' OR table_name = 'SESION';
 
 --VPD
 --Creamos la función que se encargará de filtrar los datos segun el usuario que se conecte
@@ -16,6 +16,10 @@ BEGIN
 END vpd_tablaGerente;
 /
 
+-------------------------------------------------------Desde SYS-------------------------------------------------------
+grant execute on DBMS_RLS to LIFEFIT;
+
+-------------------------------------------------------Desde LIFEFIT-------------------------------------------------------
 --Creamos la politica de seguridad
 BEGIN
   DBMS_RLS.ADD_POLICY(

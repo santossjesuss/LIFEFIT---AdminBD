@@ -43,9 +43,9 @@ create or replace PACKAGE BODY BASE AS
 
                 -- Si falla la creación del usuario, manejar el error
                 DBMS_OUTPUT.PUT_LINE('Error al crear el cliente');
-                RAISE EXCEPCION_CREACION;
         END;
 
+        DBMS_OUTPUT.PUT_LINE('Usuario creado: ' || v_usuariooracle);
         -- Asignar el rol de cliente al usuario
         EXECUTE IMMEDIATE 'GRANT cliente TO ' || v_usuariooracle;
 
@@ -65,14 +65,19 @@ create or replace PACKAGE BODY BASE AS
         SELECT * INTO P_CLIENTE FROM cliente WHERE id = v_cliente_id;
 
     EXCEPTION
+        WHEN EXCEPCION_CREACION THEN
+            -- Si se produce una excepción, realizar rollback
+            ROLLBACK;
+            DBMS_OUTPUT.PUT_LINE('EXCEPTION_CREATION: Error al crear el cliente');
+        
         WHEN OTHERS THEN
             -- Si se produce una excepción, realizar rollback
             ROLLBACK;
             
             -- Eliminar el usuario creado si la excepción ocurre después de la creación
             EXECUTE IMMEDIATE 'DROP USER ' || v_usuariooracle || ' CASCADE';
-            DBMS_OUTPUT.PUT_LINE('Error al eliminar el cliente creado');
-            RAISE EXCEPCION_ELIMINACION;
+            DBMS_OUTPUT.PUT_LINE('OTHERS: Error al crear el cliente');
+
     END CREA_CLIENTE;
     
     /*
