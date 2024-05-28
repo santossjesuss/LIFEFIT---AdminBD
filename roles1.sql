@@ -8,20 +8,20 @@ CREATE ROLE entrenador_nutricion;
 CREATE ROLE cliente;
 
 -- Permisos de administrador
-GRANT CREATE SESSION, CONNECT TO administrador WITH ADMIN OPTION;
+GRANT CREATE SESSION, CONNECT TO administrador;
 GRANT CREATE USER TO administrador;
 GRANT DROP USER TO administrador;
 
 -- Asignamos rol a LIFEEFIT:
-GRANT administrador TO LIFEFIT;
+GRANT administrador TO LIFEFIT WITH ADMIN OPTION;
 
---------------------DESDE LIFEFIT-------------------
--- Permisos para conectarse a la base de datos
+-- Asingamos permisos a los roles
 GRANT CREATE SESSION, CONNECT TO gerente;
 GRANT CREATE SESSION, CONNECT TO entrenador_deporte;
 GRANT CREATE SESSION, CONNECT TO entrenador_nutricion;
 GRANT CREATE SESSION, CONNECT TO cliente;
 
+--------------------DESDE LIFEFIT-------------------
 -- Responsabilidad Gerente
 GRANT SELECT, INSERT, UPDATE, DELETE ON centro TO gerente;
 GRANT SELECT, INSERT, UPDATE, DELETE ON entrenador TO gerente;
@@ -31,7 +31,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON cliente TO gerente;
 -- Gestión dieta (tipo) y asignación a cliente
 GRANT SELECT, UPDATE(tipo) ON dieta TO entrenador_deporte;
 
-CREATE VIEW VCLIENTES_ENTRENADOR AS SELECT * FROM cliente WHERE id = (SELECT cliente_id FROM entrena WHERE entrenador_id = (SELECT id FROM usuario WHERE usuariooracle = USER));
+CREATE OR REPLACE VIEW VCLIENTES_ENTRENADOR AS SELECT * FROM cliente WHERE id = (SELECT cliente_id FROM entrena WHERE entrenador_id = (SELECT id FROM usuario WHERE usuariooracle = USER));
 GRANT SELECT, UPDATE(dieta_id) ON VCLIENTES_ENTRENADOR TO entrenador_deporte;
 
 -- Gestión dieta
@@ -42,7 +42,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON dieta TO entrenador_nutricion;
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON ejercicio TO entrenador_deporte;
 ALTER TABLE ejercicio ADD PUBLICO CHAR(1) DEFAULT 'S';
-CREATE VIEW VEJERCICIO AS SELECT * FROM ejercicio WHERE PUBLICO = 'S';
+CREATE OR REPLACE VIEW VEJERCICIO AS SELECT * FROM ejercicio WHERE PUBLICO = 'S';
 
 -- 2. RF3. Gestión de la rutina
 GRANT SELECT, INSERT, UPDATE, DELETE ON rutina TO entrenador_deporte;
@@ -53,10 +53,10 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON entrena TO gerente;
 
 -- 4. RF4. Asignación de plan y sesiones de entrenamiento
 -- - Los entrenadores podrán asignar planes, rutinas y sesiones de ejercicios a los clientes
-CREATE VIEW VPLAN_ENTRENADOR AS SELECT * FROM plan WHERE entrena_entrenador_id = (SELECT id FROM usuario WHERE usuariooracle = USER);
+CREATE OR REPLACE VIEW VPLAN_ENTRENADOR AS SELECT * FROM plan WHERE entrena_entrenador_id = (SELECT id FROM usuario WHERE usuariooracle = USER);
 GRANT SELECT, INSERT, UPDATE, DELETE ON VPLAN_ENTRENADOR TO entrenador_deporte;
 
 ALTER TABLE sesion ADD estado_entrenamiento VARCHAR2(20 CHAR);
 
-CREATE VIEW VSESION_ENTRENADOR AS SELECT * FROM sesion WHERE plan_entrena_entrenador_id = (SELECT id FROM USUARIO WHERE usuariooracle = USER);
+CREATE OR REPLACE VIEW VSESION_ENTRENADOR AS SELECT * FROM sesion WHERE plan_entrena_entrenador_id = (SELECT id FROM USUARIO WHERE usuariooracle = USER);
 GRANT SELECT, INSERT, UPDATE(inicio, fin, presencial, descripcion, plan_inicio, plan_rutina_id, plan_entrena_entrenador_id, plan_entrena_cliente_id) ON VSESION_ENTRENADOR TO entrenador_deporte;
