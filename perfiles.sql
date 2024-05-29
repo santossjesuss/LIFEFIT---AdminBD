@@ -1,0 +1,17 @@
+--Creacion de perfiles:
+
+--Perfil cliente:
+CREATE PROFILE cliente LIMIT
+    IDLE_TIME 10
+    PASSWORD_LIFE_TIME 180
+    PASSWORD_GRACE_TIME 7;
+
+--Perfil entrenador:
+CREATE PROFILE entrenador LIMIT
+    PASSWORD_LIFE_TIME 365
+    PASSWORD_GRACE_TIME 7;
+
+--Perfil gerente:
+CREATE PROFILE gerente LIMIT
+    PASSWORD_LIFE_TIME 365
+    PASSWORD_GRACE_TIME 30;

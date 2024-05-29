@@ -112,3 +112,39 @@ BEGIN
     BASE.ELIMINA_CLIENTE(v_id);
 END;
 /
+
+-- Prueba eliminación de gerente
+set serveroutput on
+
+DECLARE
+    -- Declarar una variable para el ID del gerente a eliminar
+    v_id USUARIO.ID%TYPE := 41;
+BEGIN
+    -- Llamar al procedimiento ELIMINA_GERENTE
+    BASE.ELIMINA_GERENTE(v_id);
+END;
+/
+
+-- Prueba eliminación de entrenador
+set serveroutput on
+
+DECLARE
+    -- Declarar una variable para el ID del entrenador a eliminar
+    v_id USUARIO.ID%TYPE := 21;
+BEGIN
+    -- Llamar al procedimiento ELIMINA_ENTRENADOR
+    BASE.ELIMINA_ENTRENADOR(v_id);
+END;
+/
+
+-- Prueba eliminación de centro
+set serveroutput on
+
+DECLARE
+    -- Declarar una variable para el ID del centro a eliminar
+    v_id CENTRO.ID%TYPE := 10;
+BEGIN
+    -- Llamar al procedimiento ELIMINA_CENTRO
+    BASE.ELIMINA_CENTRO(v_id);
+END;
+/

@@ -36,7 +36,7 @@ create or replace PACKAGE BODY BASE AS
 
         -- Crear el usuario
         BEGIN
-            EXECUTE IMMEDIATE 'CREATE USER ' || v_usuariooracle || ' IDENTIFIED BY ' || P_USERPASS || ' DEFAULT TABLESPACE TS_LIFEFIT QUOTA UNLIMITED ON TS_LIFEFIT';
+            EXECUTE IMMEDIATE 'CREATE USER ' || v_usuariooracle || ' IDENTIFIED BY ' || P_USERPASS || ' DEFAULT TABLESPACE TS_LIFEFIT QUOTA UNLIMITED ON TS_LIFEFIT PROFILE cliente';
         EXCEPTION
             WHEN OTHERS THEN
                 RAISE EXCEPCION_CREACION;
@@ -138,7 +138,7 @@ create or replace PACKAGE BODY BASE AS
 
         -- Crear el usuario
         BEGIN
-            EXECUTE IMMEDIATE 'CREATE USER ' || v_usuariooracle || ' IDENTIFIED BY ' || P_USERPASS || ' DEFAULT TABLESPACE TS_LIFEFIT QUOTA UNLIMITED ON TS_LIFEFIT';
+            EXECUTE IMMEDIATE 'CREATE USER ' || v_usuariooracle || ' IDENTIFIED BY ' || P_USERPASS || ' DEFAULT TABLESPACE TS_LIFEFIT QUOTA UNLIMITED ON TS_LIFEFIT PROFILE entrenador';
         EXCEPTION
             WHEN OTHERS THEN
                 RAISE EXCEPCION_CREACION;
@@ -243,7 +243,7 @@ create or replace PACKAGE BODY BASE AS
 
         -- Crear el usuario
         BEGIN
-            EXECUTE IMMEDIATE 'CREATE USER ' || v_usuariooracle || ' IDENTIFIED BY ' || P_USERPASS || ' DEFAULT TABLESPACE TS_LIFEFIT QUOTA UNLIMITED ON TS_LIFEFIT';
+            EXECUTE IMMEDIATE 'CREATE USER ' || v_usuariooracle || ' IDENTIFIED BY ' || P_USERPASS || ' DEFAULT TABLESPACE TS_LIFEFIT QUOTA UNLIMITED ON TS_LIFEFIT PROFILE gerente';
         EXCEPTION
             WHEN OTHERS THEN
                 RAISE EXCEPCION_CREACION;
@@ -423,12 +423,15 @@ create or replace PACKAGE BODY BASE AS
     EXCEPTION
         WHEN EXCEPCION_ELIMINACION THEN
             DBMS_OUTPUT.PUT_LINE('EXCEPCION_ELIMINACION: Error al eliminar el usuario');
+            RAISE EXCEPCION_ELIMINACION;
 
         WHEN EXCEPCION_MODIFICACION THEN
             DBMS_OUTPUT.PUT_LINE('EXCEPCION_MODIFICACION: Error al modificar tabla usuario');
+            RAISE EXCEPCION_MODIFICACION;
 
         WHEN EXCEPCION_LECTURA THEN
             DBMS_OUTPUT.PUT_LINE('EXCEPCION_LECTURA: Error al leer tabla usuario');
+            RAISE EXCEPCION_LECTURA;
 
     END ELIMINA_CLIENTE;
 
@@ -474,12 +477,15 @@ create or replace PACKAGE BODY BASE AS
     EXCEPTION
         WHEN EXCEPCION_ELIMINACION THEN
             DBMS_OUTPUT.PUT_LINE('EXCEPCION_ELIMINACION: Error al eliminar el usuario');
+            RAISE EXCEPCION_ELIMINACION;
 
         WHEN EXCEPCION_MODIFICACION THEN
             DBMS_OUTPUT.PUT_LINE('EXCEPCION_MODIFICACION: Error al modificar tabla usuario');
+            RAISE EXCEPCION_MODIFICACION;
 
         WHEN EXCEPCION_LECTURA THEN
             DBMS_OUTPUT.PUT_LINE('EXCEPCION_LECTURA: Error al leer tabla usuario');
+            RAISE EXCEPCION_LECTURA;
 
     END ELIMINA_GERENTE;
 
@@ -565,25 +571,77 @@ create or replace PACKAGE BODY BASE AS
     EXCEPTION
         WHEN EXCEPCION_ELIMINACION THEN
             DBMS_OUTPUT.PUT_LINE('EXCEPCION_ELIMINACION: Error al eliminar el usuario');
+            RAISE EXCEPCION_ELIMINACION;
 
         WHEN EXCEPCION_MODIFICACION THEN
             DBMS_OUTPUT.PUT_LINE('EXCEPCION_MODIFICACION: Error al modificar tabla usuario');
+            RAISE EXCEPCION_MODIFICACION;
 
         WHEN EXCEPCION_LECTURA THEN
             DBMS_OUTPUT.PUT_LINE('EXCEPCION_LECTURA: Error al leer tabla usuario');
+            RAISE EXCEPCION_LECTURA;
 
     END ELIMINA_ENTRENADOR;
 
-    -- Implementación del procedimiento de elimina centro usando las funciones anteriores
+    
+    --Eliminar centro usando elimina_gerente, elimina_cliente y elimina_entrenador, estos dos ultimos con un bucle donde
+    --se recorren todos los clientes y entrenadores con centro_id = P_ID, hasta que ya no haya mas
     PROCEDURE ELIMINA_CENTRO(P_ID CENTRO.ID%TYPE) IS
-        v_gerente_id USUARIO.ID%TYPE;
-        v_cliente_id USUARIO.ID%TYPE;
+        --Creamos array de clientes y entrenadores
+        TYPE nested_table_of_integers IS TABLE OF INTEGER;
+        v_clientes_ids nested_table_of_integers := nested_table_of_integers();
+        v_entrenadores_ids nested_table_of_integers := nested_table_of_integers();
 
+        --Cursor para recorrer los clientes
+        CURSOR c_clientes IS
+            SELECT id FROM cliente WHERE centro_id = P_ID;
+
+        --Cursor para recorrer los entrenadores
+        CURSOR c_entrenadores IS
+            SELECT id FROM entrenador WHERE centro_id = P_ID;
+        
+        v_gerente_id USUARIO.ID%TYPE;
     BEGIN
+        -- Añadir ids de clientes al array
+        FOR c IN c_clientes LOOP
+            v_clientes_ids.EXTEND;
+            SYS.DBMS_OUTPUT.PUT_LINE('Añadiendo Cliente ID: ' || c.id);
+            v_clientes_ids(v_clientes_ids.LAST) := c.id;
+        END LOOP;
+
+        -- Añadir ids de entrenadores al array
+        FOR c IN c_entrenadores LOOP
+            v_entrenadores_ids.EXTEND;
+            SYS.DBMS_OUTPUT.PUT_LINE('Añadiendo Entrenador ID: ' || c.id);
+            v_entrenadores_ids(v_entrenadores_ids.LAST) := c.id;
+        END LOOP;
+
+        -- Eliminar los clientes
+        FOR i IN 1..v_clientes_ids.COUNT LOOP
+            BEGIN
+                SYS.DBMS_OUTPUT.PUT_LINE('Eliminando Cliente ID: ' || v_clientes_ids(i));
+                BASE.ELIMINA_CLIENTE(v_clientes_ids(i));
+            EXCEPTION
+                WHEN OTHERS THEN
+                    RAISE EXCEPCION_ELIMINACION;
+            END;
+        END LOOP;
+
+        -- Eliminar los entrenadores
+        FOR i IN 1..v_entrenadores_ids.COUNT LOOP
+            BEGIN
+                SYS.DBMS_OUTPUT.PUT_LINE('Eliminando Entrenador ID: ' || v_entrenadores_ids(i));
+                BASE.ELIMINA_ENTRENADOR(v_entrenadores_ids(i));
+            EXCEPTION
+                WHEN OTHERS THEN
+                    RAISE EXCEPCION_ELIMINACION;
+            END;
+        END LOOP;
         
         -- Obtener el ID del usuario del gerente del centro
         BEGIN
-            SELECT gerente_id INTO v_gerente_id FROM centro WHERE id = P_ID;
+            SELECT id INTO v_gerente_id FROM centro WHERE id = P_ID;
+            SYS.DBMS_OUTPUT.PUT_LINE('Gerente ID: ' || v_gerente_id);
         EXCEPTION
             WHEN OTHERS THEN
                 RAISE EXCEPCION_LECTURA;
@@ -597,22 +655,27 @@ create or replace PACKAGE BODY BASE AS
                 RAISE EXCEPCION_ELIMINACION;
         END;
 
-        -- Obtener los IDs de los usuarios de los clientes del centro
+        -- Eliminar el centro
         BEGIN
-            SELECT id INTO v_cliente_id FROM cliente WHERE centro_id = P_ID;
-        EXCEPTION
-            WHEN OTHERS THEN
-            RAISE EXCEPCION_LECTURA;
-        END;
-
-        -- Eliminar los clientesccon un bucle
-        BEGIN
-            BASE.ELIMINA_CLIENTE(v_cliente_id);
+            DELETE FROM centro WHERE id = P_ID;
         EXCEPTION
             WHEN OTHERS THEN
                 RAISE EXCEPCION_ELIMINACION;
         END;
 
+        COMMIT; 
+
+    EXCEPTION
+        WHEN EXCEPCION_ELIMINACION THEN
+            DBMS_OUTPUT.PUT_LINE('EXCEPCION_ELIMINACION: Error al eliminar el usuario');
+
+        WHEN EXCEPCION_MODIFICACION THEN
+            DBMS_OUTPUT.PUT_LINE('EXCEPCION_MODIFICACION: Error al modificar tabla usuario');
+
+        WHEN EXCEPCION_LECTURA THEN
+            DBMS_OUTPUT.PUT_LINE('EXCEPCION_LECTURA: Error al leer tabla usuario');
+
+    END ELIMINA_CENTRO;
 
 END BASE;
 /

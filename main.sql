@@ -42,12 +42,21 @@
 -- Desde LIFEFIT --
 @roles2
 
+------------------------------------------------Seguridad
+-- Desde LIFEFIT --
+@perfiles
+@seguridad
+-- Desde SYSTEM --
+@audit
 ------------------------------------------------PL/SQL
 -- Desde LIFEFIT --
 @secuencia
 @base 
 @base_body
+@icalc
+@icalc_body
+@job
 
-------------------------------------------------Seguridad
+--------------------------------------------------VistasAdicionales
 -- Desde LIFEFIT --
-@seguridad
+@vistas_adicionales
