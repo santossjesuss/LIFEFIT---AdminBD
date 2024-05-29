@@ -56,6 +56,7 @@ create or replace PACKAGE BODY BASE AS
         EXCEPTION
             WHEN OTHERS THEN
                 RAISE EXCEPCION_MODIFICACION;
+                SYS.DBMS_OUTPUT.PUT_LINE(SQLERRM);
         END;
 
         -- Recuperar los datos de usuario y cliente

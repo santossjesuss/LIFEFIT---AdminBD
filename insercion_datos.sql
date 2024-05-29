@@ -276,12 +276,12 @@ END;
 /
 
 --Llenamos tabla elementocalen
-INSERT INTO ELEMENTOCALEN (fechayhora, entrenador_id) VALUES (TO_DATE('2024-06-19 10:00:00', 'YYYY-MM-DD HH24:MI:SS'), 40);
-INSERT INTO ELEMENTOCALEN (fechayhora, entrenador_id) VALUES (TO_DATE('2024-07-30 10:00:00', 'YYYY-MM-DD HH24:MI:SS'), 41);
+INSERT INTO ELEMENTOCALEN (fechayhora, entrenador_id) VALUES (TO_DATE('2024-06-19 10:00:00', 'YYYY-MM-DD HH24:MI:SS'), 35);
+INSERT INTO ELEMENTOCALEN (fechayhora, entrenador_id) VALUES (TO_DATE('2024-07-30 10:00:00', 'YYYY-MM-DD HH24:MI:SS'), 36);
 
 --Llenamos tabla citas
-INSERT INTO CITA (fechayhora, id, modalidad, cliente_id, estado_cita) VALUES (TO_DATE('2024-06-19 10:00:00', 'YYYY-MM-DD HH24:MI:SS'), 40, 'Presencial', 38, 'P');
-INSERT INTO CITA (fechayhora, id, modalidad, cliente_id, estado_cita) VALUES (TO_DATE('2024-07-30 10:00:00', 'YYYY-MM-DD HH24:MI:SS'), 41, 'Presencial', 39, 'P');
+INSERT INTO CITA (fechayhora, id, modalidad, cliente_id, estado_cita) VALUES (TO_DATE('2024-06-19 10:00:00', 'YYYY-MM-DD HH24:MI:SS'), 35, 'Presencial', 42, 'P');
+INSERT INTO CITA (fechayhora, id, modalidad, cliente_id, estado_cita) VALUES (TO_DATE('2024-07-30 10:00:00', 'YYYY-MM-DD HH24:MI:SS'), 36, 'Presencial', 43, 'P');
 
 --Llenamos tabla rutina
 INSERT INTO RUTINA (id, nombre, descripcion) VALUES (1, 'pepe', 'rutina de pepe');
@@ -289,18 +289,18 @@ INSERT INTO RUTINA (id, nombre, descripcion) VALUES (2, 'juan', 'rutina de juan'
 INSERT INTO RUTINA (id, nombre, descripcion) VALUES (3, 'luis', 'rutina de luis');
 
 --Llenamos tabla entrena
-INSERT INTO ENTRENA (especialidad, entrenador_id, cliente_id) VALUES ('ENTRENAMIENTO', 40, 37);
-INSERT INTO ENTRENA (especialidad, entrenador_id, cliente_id) VALUES ('ENTRENAMIENTO', 41, 39);
+INSERT INTO ENTRENA (especialidad, entrenador_id, cliente_id) VALUES ('ENTRENAMIENTO', 35, 42);
+INSERT INTO ENTRENA (especialidad, entrenador_id, cliente_id) VALUES ('ENTRENAMIENTO', 36, 43);
 
 --Llenamos tabla plan
 INSERT INTO PLAN (inicio, fin, rutina_id, entrena_entrenador_id, entrena_cliente_id) 
-VALUES (TO_DATE('2024-06-19 10:00:00', 'YYYY-MM-DD HH24:MI:SS'), null, 1, 40, 37);
+VALUES (TO_DATE('2024-06-19 10:00:00', 'YYYY-MM-DD HH24:MI:SS'), null, 1, 35, 42);
 INSERT INTO PLAN (inicio, fin, rutina_id, entrena_entrenador_id, entrena_cliente_id)
-VALUES (TO_DATE('2024-06-30 10:00:00', 'YYYY-MM-DD HH24:MI:SS'), null, 1, 41, 39);
+VALUES (TO_DATE('2024-06-30 10:00:00', 'YYYY-MM-DD HH24:MI:SS'), null, 1, 36, 43);
 
 --Llenamos tabla sesion
 INSERT INTO SESION (inicio, fin, presencial, descripcion, video, datos_salud, plan_inicio, plan_rutina_id, plan_entrena_entrenador_id, plan_entrena_cliente_id)
-VALUES (TO_DATE('2024-06-19 10:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2024-06-19 11:00:00', 'YYYY-MM-DD HH24:MI:SS'), 'Sí', 'Calentamiento', 'https://www.youtube.com/watch?v=123456', 'Saludable',TO_DATE('2024-06-19 10:00:00', 'YYYY-MM-DD HH24:MI:SS') , 1, 40, 37);
+VALUES (TO_DATE('2024-06-19 10:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2024-06-19 11:00:00', 'YYYY-MM-DD HH24:MI:SS'), 'Sí', 'Calentamiento', 'https://www.youtube.com/watch?v=123456', 'Saludable',TO_DATE('2024-06-19 10:00:00', 'YYYY-MM-DD HH24:MI:SS') , 1, 35, 42);
 INSERT INTO SESION (inicio, fin, presencial, descripcion, video, datos_salud, plan_inicio, plan_rutina_id, plan_entrena_entrenador_id, plan_entrena_cliente_id)
-VALUES (TO_DATE('2024-06-30 10:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2024-06-30 11:00:00', 'YYYY-MM-DD HH24:MI:SS'), 'No', 'Calentamiento', 'https://www.youtube.com/watch?v=123456', 'Saludable',TO_DATE('2024-06-30 10:00:00', 'YYYY-MM-DD HH24:MI:SS') , 1, 41, 39);
+VALUES (TO_DATE('2024-06-30 10:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2024-06-30 11:00:00', 'YYYY-MM-DD HH24:MI:SS'), 'No', 'Calentamiento', 'https://www.youtube.com/watch?v=123456', 'Saludable',TO_DATE('2024-06-30 10:00:00', 'YYYY-MM-DD HH24:MI:SS') , 1, 36, 43);
 
