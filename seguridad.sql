@@ -1,3 +1,4 @@
+-------------------------------------------------------Desde LIFEFIT-------------------------------------------------------
 --Consulta para ver la columna cifrada
 SELECT table_name, column_name, encryption_alg 
 FROM user_encrypted_columns 

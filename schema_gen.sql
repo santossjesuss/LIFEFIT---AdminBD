@@ -22,9 +22,7 @@ CREATE TABLE cita (
     fechayhora DATE NOT NULL,
     id         INTEGER NOT NULL,
     modalidad  VARCHAR2(20 CHAR),
-    cliente_id INTEGER NOT NULL,
-
-    CONSTRAINT fechayhora_ck CHECK (fechayhora > SYSDATE)
+    cliente_id INTEGER NOT NULL
 );
 
 ALTER TABLE cita ADD CONSTRAINT cita_pk PRIMARY KEY ( fechayhora,

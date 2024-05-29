@@ -5,9 +5,13 @@ CREATE USER LIFEFIT IDENTIFIED BY LIFEFIT123
     DEFAULT TABLESPACE TS_LIFEFIT
     QUOTA 10M ON TS_LIFEFIT;
 
---También para crear secuencias, procedimientos, vistas y vistas materializadas
+--También para crear secuencias, procedimientos, vistas, vistas materializadas...
 GRANT CREATE SESSION, CONNECT TO LIFEFIT WITH ADMIN OPTION;
-GRANT CREATE TABLE, CREATE VIEW, CREATE MATERIALIZED VIEW, CREATE SEQUENCE, CREATE PROCEDURE, CREATE ROLE TO LIFEFIT;
+GRANT CREATE TABLE, CREATE VIEW, CREATE MATERIALIZED VIEW, CREATE SEQUENCE, CREATE PROCEDURE, CREATE ROLE, CREATE PROFILE TO LIFEFIT;
+
+-- Privilegios para la creacion de jobs
+GRANT CREATE JOB TO LIFEFIT;
+
 
 -- Privilegios para crear triggers , necesarios para las secuencias, y para crear sinónimos
 GRANT CREATE TRIGGER, CREATE PUBLIC SYNONYM TO LIFEFIT;

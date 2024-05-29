@@ -423,15 +423,12 @@ create or replace PACKAGE BODY BASE AS
     EXCEPTION
         WHEN EXCEPCION_ELIMINACION THEN
             DBMS_OUTPUT.PUT_LINE('EXCEPCION_ELIMINACION: Error al eliminar el usuario');
-            RAISE EXCEPCION_ELIMINACION;
 
         WHEN EXCEPCION_MODIFICACION THEN
             DBMS_OUTPUT.PUT_LINE('EXCEPCION_MODIFICACION: Error al modificar tabla usuario');
-            RAISE EXCEPCION_MODIFICACION;
 
         WHEN EXCEPCION_LECTURA THEN
             DBMS_OUTPUT.PUT_LINE('EXCEPCION_LECTURA: Error al leer tabla usuario');
-            RAISE EXCEPCION_LECTURA;
 
     END ELIMINA_CLIENTE;
 
@@ -477,15 +474,12 @@ create or replace PACKAGE BODY BASE AS
     EXCEPTION
         WHEN EXCEPCION_ELIMINACION THEN
             DBMS_OUTPUT.PUT_LINE('EXCEPCION_ELIMINACION: Error al eliminar el usuario');
-            RAISE EXCEPCION_ELIMINACION;
 
         WHEN EXCEPCION_MODIFICACION THEN
             DBMS_OUTPUT.PUT_LINE('EXCEPCION_MODIFICACION: Error al modificar tabla usuario');
-            RAISE EXCEPCION_MODIFICACION;
 
         WHEN EXCEPCION_LECTURA THEN
             DBMS_OUTPUT.PUT_LINE('EXCEPCION_LECTURA: Error al leer tabla usuario');
-            RAISE EXCEPCION_LECTURA;
 
     END ELIMINA_GERENTE;
 
@@ -502,13 +496,6 @@ create or replace PACKAGE BODY BASE AS
                 RAISE EXCEPCION_LECTURA;
         END;
 
-        -- Eliminar el usuario
-        BEGIN
-            EXECUTE IMMEDIATE 'DROP USER ' || v_usuariooracle || ' CASCADE';
-        EXCEPTION
-            WHEN OTHERS THEN
-                RAISE EXCEPCION_ELIMINACION;
-        END;
 
         BEGIN
             -- Poner a null el usuariooracle en la tabla usuario
@@ -519,6 +506,14 @@ create or replace PACKAGE BODY BASE AS
         END;
 
         BEGIN
+            -- Eliminar las citas
+            DELETE FROM cita WHERE id = P_ID;
+        EXCEPTION
+            WHEN OTHERS THEN
+                RAISE EXCEPCION_ELIMINACION;
+        END;
+        
+        BEGIN
             -- Eliminar los elementos calendario
             DELETE FROM elementocalen WHERE entrenador_id = P_ID;
         EXCEPTION
@@ -526,13 +521,6 @@ create or replace PACKAGE BODY BASE AS
                 RAISE EXCEPCION_ELIMINACION;
         END;
 
-        BEGIN
-            -- Eliminar las citas
-            DELETE FROM cita WHERE id = P_ID;
-        EXCEPTION
-            WHEN OTHERS THEN
-                RAISE EXCEPCION_ELIMINACION;
-        END;
 
         BEGIN
             -- Eliminar las sesion
@@ -566,20 +554,25 @@ create or replace PACKAGE BODY BASE AS
                 RAISE EXCEPCION_ELIMINACION;
         END;
 
+        -- Eliminar el usuario
+        BEGIN
+            EXECUTE IMMEDIATE 'DROP USER ' || v_usuariooracle || ' CASCADE';
+        EXCEPTION
+            WHEN OTHERS THEN
+                RAISE EXCEPCION_ELIMINACION;
+        END;
+        
         COMMIT;
 
     EXCEPTION
         WHEN EXCEPCION_ELIMINACION THEN
             DBMS_OUTPUT.PUT_LINE('EXCEPCION_ELIMINACION: Error al eliminar el usuario');
-            RAISE EXCEPCION_ELIMINACION;
 
         WHEN EXCEPCION_MODIFICACION THEN
             DBMS_OUTPUT.PUT_LINE('EXCEPCION_MODIFICACION: Error al modificar tabla usuario');
-            RAISE EXCEPCION_MODIFICACION;
 
         WHEN EXCEPCION_LECTURA THEN
             DBMS_OUTPUT.PUT_LINE('EXCEPCION_LECTURA: Error al leer tabla usuario');
-            RAISE EXCEPCION_LECTURA;
 
     END ELIMINA_ENTRENADOR;
 

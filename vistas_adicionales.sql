@@ -1,4 +1,4 @@
-CREATE VIEW full_datos_entrenador AS
+CREATE OR REPLACE VIEW full_datos_entrenador AS
 SELECT 
     e.id AS entrenador_id,
     e.disponibilidad,

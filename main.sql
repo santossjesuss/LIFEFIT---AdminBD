@@ -11,8 +11,6 @@
 
 -- 3 - IMPORTACION DE DATOS
 -- Desde el interfaz de usuario de Oracle SQL Developer para Usuario y Centro --
--- Desde LIFEFIT (resto) --
-@insercion_datos
 
 -- 4 - TABLAS EXTERNAS
 -- LIFEFIT y SYSTEM (ver dentro del archivo)--
@@ -33,6 +31,10 @@
 -- 8 EJERCICIO
 -- Desde LIFEFIT --
 @ejercicio
+
+--------------------------------------------------VistasAdicionales
+-- Desde LIFEFIT --
+@vistas_adicionales
 
 ------------------------------------------------PARTE 2 y 3
 
@@ -56,7 +58,6 @@
 @icalc
 @icalc_body
 @job
-
---------------------------------------------------VistasAdicionales
+--------------------------------------------------Llenado BD
 -- Desde LIFEFIT --
-@vistas_adicionales
+@insercion_datos
